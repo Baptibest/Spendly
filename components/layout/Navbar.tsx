@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, BarChart3, Wallet, History, Trophy, Settings } from 'lucide-react';
+import { Home, BarChart3, Wallet, History, Trophy, Gift, Settings } from 'lucide-react';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import clsx from 'clsx';
 
@@ -39,6 +39,7 @@ export default function Navbar() {
     { href: '/budgets', label: 'Budgets', icon: Wallet },
     { href: '/history', label: 'Historique', icon: History },
     { href: '/succes', label: 'Succès', icon: Trophy },
+    { href: '/cashback', label: 'Cashback', icon: Gift },
     { href: '/settings', label: 'Paramètres', icon: Settings },
   ];
 
