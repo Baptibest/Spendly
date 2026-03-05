@@ -59,10 +59,10 @@ export default function Navbar() {
             <Image
               src="/Spendly.png"
               alt="Spendly"
-              width={120}
-              height={40}
+              width={180}
+              height={60}
               priority
-              className="h-10 w-auto"
+              className="h-14 w-auto"
             />
           </div>
           <div className="flex space-x-4">
