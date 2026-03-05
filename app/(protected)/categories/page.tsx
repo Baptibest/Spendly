@@ -148,7 +148,7 @@ export default function CategoriesPage() {
                   </div>
                 </div>
                 <button
-                  onClick={() => handleDelete(category.id, category.name)}
+                  onClick={() => handleDelete(category.id)}
                   className="text-danger hover:text-red-600 p-2 transition-colors"
                   title="Supprimer"
                 >
