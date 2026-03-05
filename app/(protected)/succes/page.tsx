@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useEffect, useState } from 'react';
+import Image from 'next/image';
 import Card from '@/components/ui/Card';
 import { Trophy, RefreshCw } from 'lucide-react';
 import { Achievement, RARITY_COLORS, RARITY_LABELS } from '@/types/achievement.types';
@@ -99,7 +100,11 @@ export default function SuccesPage() {
                   className={`p-3 rounded-lg border-2 h-24 flex items-center ${RARITY_COLORS[achievement.rarity].border} ${RARITY_COLORS[achievement.rarity].bg}`}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">{achievement.icon}</span>
+                    {achievement.icon.startsWith('/') ? (
+                      <Image src={achievement.icon} alt={achievement.title} width={32} height={32} className="object-contain" />
+                    ) : (
+                      <span className="text-2xl">{achievement.icon}</span>
+                    )}
                     <div className="flex-1">
                       <p className="font-medium">{achievement.title}</p>
                       <p className="text-xs text-gray-600">{achievement.description}</p>
@@ -161,7 +166,11 @@ export default function SuccesPage() {
                   className={`p-3 rounded-lg border-2 h-24 flex items-center ${RARITY_COLORS[achievement.rarity].border} ${RARITY_COLORS[achievement.rarity].bg}`}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">{achievement.icon}</span>
+                    {achievement.icon.startsWith('/') ? (
+                      <Image src={achievement.icon} alt={achievement.title} width={32} height={32} className="object-contain" />
+                    ) : (
+                      <span className="text-2xl">{achievement.icon}</span>
+                    )}
                     <div className="flex-1">
                       <p className="font-medium">{achievement.title}</p>
                       <p className="text-xs text-gray-600">{achievement.description}</p>
@@ -206,7 +215,11 @@ export default function SuccesPage() {
               }
             >
               <div className="flex items-start gap-3">
-                <span className="text-3xl">{achievement.icon}</span>
+                {achievement.icon.startsWith('/') ? (
+                  <Image src={achievement.icon} alt={achievement.title} width={40} height={40} className="object-contain" />
+                ) : (
+                  <span className="text-3xl">{achievement.icon}</span>
+                )}
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <p className={`font-semibold ${achievement.rarity === 'mythic' ? 'text-white' : ''}`}>{achievement.title}</p>

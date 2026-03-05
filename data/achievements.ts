@@ -154,7 +154,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     id: 'no-expense-5-days',
     title: 'Vous êtes un Rat',
     description: 'Aucune dépense pendant 5 jours',
-    icon: '🐀',
+    icon: '/Cochon rat .png',
     rarity: 'legendary',
     unlocked: false
   },
@@ -162,7 +162,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     id: 'daily-expense-5-days',
     title: 'Cochon qui Flambe',
     description: 'Une dépense par jour pendant 5 jours',
-    icon: '🔥',
+    icon: '/Cochon Monocle.png',
     rarity: 'legendary',
     unlocked: false
   }
