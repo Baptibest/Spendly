@@ -96,30 +96,30 @@ export default function SuccesPage() {
         {/* Statistiques par rareté */}
         <Card title="📊 Statistiques">
           <div className="space-y-3">
-            <div className="p-3 bg-gray-100 rounded-lg">
+            <div className="p-3 rounded-lg border-2 border-gray-300 bg-gray-100">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-gray-700">Communes</p>
-                <span className="px-2 py-1 bg-gray-500 text-white text-xs rounded">Commune</span>
+                <span className="px-2 py-0.5 bg-gray-500 text-white text-xs rounded">Commune</span>
               </div>
               <p className="text-2xl font-bold text-gray-700 mt-1">
                 {stats.common.unlocked}/{stats.common.total}
               </p>
             </div>
             
-            <div className="p-3 bg-blue-100 rounded-lg">
+            <div className="p-3 rounded-lg border-2 border-blue-300 bg-blue-100">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-blue-700">Rares</p>
-                <span className="px-2 py-1 bg-blue-500 text-white text-xs rounded">Rare</span>
+                <span className="px-2 py-0.5 bg-blue-500 text-white text-xs rounded">Rare</span>
               </div>
               <p className="text-2xl font-bold text-blue-700 mt-1">
                 {stats.rare.unlocked}/{stats.rare.total}
               </p>
             </div>
 
-            <div className="p-3 bg-yellow-100 rounded-lg">
+            <div className="p-3 rounded-lg border-2 border-yellow-300 bg-yellow-100">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-yellow-700">Légendaires</p>
-                <span className="px-2 py-1 bg-yellow-500 text-white text-xs rounded">Légendaire</span>
+                <span className="px-2 py-0.5 bg-yellow-500 text-white text-xs rounded">Légendaire</span>
               </div>
               <p className="text-2xl font-bold text-yellow-700 mt-1">
                 {stats.legendary.unlocked}/{stats.legendary.total}
