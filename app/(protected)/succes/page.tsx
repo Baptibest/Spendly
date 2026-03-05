@@ -1,9 +1,59 @@
 'use client';
 
+import { useMemo } from 'react';
 import Card from '@/components/ui/Card';
-import { Trophy, Star, Target, TrendingUp } from 'lucide-react';
+import { Trophy } from 'lucide-react';
+import { ACHIEVEMENTS } from '@/data/achievements';
+import { Achievement, RARITY_COLORS, RARITY_LABELS } from '@/types/achievement.types';
 
 export default function SuccesPage() {
+  // Séparer les succès par statut
+  const unlockedAchievements = useMemo(() => 
+    ACHIEVEMENTS.filter(a => a.unlocked),
+    []
+  );
+  
+  const lockedAchievements = useMemo(() => 
+    ACHIEVEMENTS.filter(a => !a.unlocked),
+    []
+  );
+
+  // 3 objectifs aléatoires parmi les non réalisés
+  const randomObjectives = useMemo(() => {
+    const shuffled = [...lockedAchievements].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 3);
+  }, [lockedAchievements]);
+
+  // 3 meilleurs succès réalisés (légendaires > rares > communs)
+  const topAchievements = useMemo(() => {
+    const rarityOrder = { legendary: 3, rare: 2, common: 1 };
+    return [...unlockedAchievements]
+      .sort((a, b) => rarityOrder[b.rarity] - rarityOrder[a.rarity])
+      .slice(0, 3);
+  }, [unlockedAchievements]);
+
+  // Statistiques par rareté
+  const stats = useMemo(() => {
+    const common = ACHIEVEMENTS.filter(a => a.rarity === 'common');
+    const rare = ACHIEVEMENTS.filter(a => a.rarity === 'rare');
+    const legendary = ACHIEVEMENTS.filter(a => a.rarity === 'legendary');
+
+    return {
+      common: {
+        unlocked: common.filter(a => a.unlocked).length,
+        total: common.length
+      },
+      rare: {
+        unlocked: rare.filter(a => a.unlocked).length,
+        total: rare.length
+      },
+      legendary: {
+        unlocked: legendary.filter(a => a.unlocked).length,
+        total: legendary.length
+      }
+    };
+  }, []);
+
   return (
     <div className="space-y-6">
       <div>
@@ -16,109 +66,135 @@ export default function SuccesPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Objectifs - 3 succès aléatoires non réalisés */}
         <Card title="🎯 Objectifs">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <Target className="text-primary-600" size={24} />
-                <div>
-                  <p className="font-medium">Premier budget créé</p>
-                  <p className="text-sm text-gray-500">Débloqué</p>
+          <div className="space-y-3">
+            {randomObjectives.length > 0 ? (
+              randomObjectives.map((achievement) => (
+                <div
+                  key={achievement.id}
+                  className={`p-3 rounded-lg border-2 ${RARITY_COLORS[achievement.rarity].border} ${RARITY_COLORS[achievement.rarity].bg}`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{achievement.icon}</span>
+                    <div className="flex-1">
+                      <p className="font-medium">{achievement.title}</p>
+                      <p className="text-xs text-gray-600">{achievement.description}</p>
+                      <span className={`inline-block mt-1 px-2 py-0.5 rounded text-xs text-white ${RARITY_COLORS[achievement.rarity].badge}`}>
+                        {RARITY_LABELS[achievement.rarity]}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <Trophy className="text-yellow-500" size={24} />
-            </div>
-            
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg opacity-50">
-              <div className="flex items-center gap-3">
-                <Star className="text-gray-400" size={24} />
-                <div>
-                  <p className="font-medium">Budget respecté</p>
-                  <p className="text-sm text-gray-500">À débloquer</p>
-                </div>
-              </div>
-              <Trophy className="text-gray-300" size={24} />
-            </div>
-
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg opacity-50">
-              <div className="flex items-center gap-3">
-                <TrendingUp className="text-gray-400" size={24} />
-                <div>
-                  <p className="font-medium">Épargne atteinte</p>
-                  <p className="text-sm text-gray-500">À débloquer</p>
-                </div>
-              </div>
-              <Trophy className="text-gray-300" size={24} />
-            </div>
+              ))
+            ) : (
+              <p className="text-center text-gray-500 py-4">Tous les succès débloqués ! 🎉</p>
+            )}
           </div>
         </Card>
 
+        {/* Statistiques par rareté */}
         <Card title="📊 Statistiques">
-          <div className="space-y-4">
-            <div className="p-3 bg-primary-50 rounded-lg">
-              <p className="text-sm text-gray-600">Jours consécutifs</p>
-              <p className="text-3xl font-bold text-primary-700">7</p>
+          <div className="space-y-3">
+            <div className="p-3 bg-gray-100 rounded-lg">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-gray-700">Communes</p>
+                <span className="px-2 py-1 bg-gray-500 text-white text-xs rounded">Commune</span>
+              </div>
+              <p className="text-2xl font-bold text-gray-700 mt-1">
+                {stats.common.unlocked}/{stats.common.total}
+              </p>
             </div>
             
-            <div className="p-3 bg-green-50 rounded-lg">
-              <p className="text-sm text-gray-600">Budgets respectés</p>
-              <p className="text-3xl font-bold text-success">3</p>
+            <div className="p-3 bg-blue-100 rounded-lg">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-blue-700">Rares</p>
+                <span className="px-2 py-1 bg-blue-500 text-white text-xs rounded">Rare</span>
+              </div>
+              <p className="text-2xl font-bold text-blue-700 mt-1">
+                {stats.rare.unlocked}/{stats.rare.total}
+              </p>
             </div>
 
-            <div className="p-3 bg-yellow-50 rounded-lg">
-              <p className="text-sm text-gray-600">Succès débloqués</p>
-              <p className="text-3xl font-bold text-yellow-600">1/10</p>
+            <div className="p-3 bg-yellow-100 rounded-lg">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-yellow-700">Légendaires</p>
+                <span className="px-2 py-1 bg-yellow-500 text-white text-xs rounded">Légendaire</span>
+              </div>
+              <p className="text-2xl font-bold text-yellow-700 mt-1">
+                {stats.legendary.unlocked}/{stats.legendary.total}
+              </p>
             </div>
           </div>
         </Card>
 
-        <Card title="🎖️ Badges">
-          <div className="grid grid-cols-3 gap-3">
-            <div className="flex flex-col items-center p-3 bg-yellow-50 rounded-lg">
-              <Trophy className="text-yellow-500" size={32} />
-              <p className="text-xs mt-2 text-center">Débutant</p>
-            </div>
-            
-            <div className="flex flex-col items-center p-3 bg-gray-50 rounded-lg opacity-50">
-              <Trophy className="text-gray-300" size={32} />
-              <p className="text-xs mt-2 text-center">Expert</p>
-            </div>
-
-            <div className="flex flex-col items-center p-3 bg-gray-50 rounded-lg opacity-50">
-              <Trophy className="text-gray-300" size={32} />
-              <p className="text-xs mt-2 text-center">Maître</p>
-            </div>
+        {/* Meilleurs succès - 3 meilleurs réalisés */}
+        <Card title="🎖️ Meilleurs Succès">
+          <div className="space-y-3">
+            {topAchievements.length > 0 ? (
+              topAchievements.map((achievement) => (
+                <div
+                  key={achievement.id}
+                  className={`p-3 rounded-lg border-2 ${RARITY_COLORS[achievement.rarity].border} ${RARITY_COLORS[achievement.rarity].bg}`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{achievement.icon}</span>
+                    <div className="flex-1">
+                      <p className="font-medium">{achievement.title}</p>
+                      <p className="text-xs text-gray-600">{achievement.description}</p>
+                      <span className={`inline-block mt-1 px-2 py-0.5 rounded text-xs text-white ${RARITY_COLORS[achievement.rarity].badge}`}>
+                        {RARITY_LABELS[achievement.rarity]}
+                      </span>
+                    </div>
+                    <Trophy className="text-yellow-500" size={24} />
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-gray-500 py-4">Aucun succès débloqué pour le moment</p>
+            )}
           </div>
         </Card>
       </div>
 
-      <Card title="🎯 Défis du mois">
-        <div className="space-y-3">
-          <div className="p-4 border-l-4 border-primary-500 bg-primary-50 rounded">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-semibold">Respecter tous les budgets</p>
-                <p className="text-sm text-gray-600">Progression: 60%</p>
+      {/* Tous les succès */}
+      <Card title="� Tous les Succès">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {ACHIEVEMENTS.map((achievement) => (
+            <div
+              key={achievement.id}
+              className={`p-4 rounded-lg border-2 ${
+                achievement.unlocked
+                  ? `${RARITY_COLORS[achievement.rarity].border} ${RARITY_COLORS[achievement.rarity].bg}`
+                  : 'border-gray-200 bg-gray-50 opacity-60'
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                <span className="text-3xl">{achievement.icon}</span>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <p className="font-semibold">{achievement.title}</p>
+                    {achievement.unlocked && (
+                      <Trophy className="text-yellow-500" size={20} />
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-600 mt-1">{achievement.description}</p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className={`px-2 py-0.5 rounded text-xs text-white ${
+                      achievement.unlocked
+                        ? RARITY_COLORS[achievement.rarity].badge
+                        : 'bg-gray-400'
+                    }`}>
+                      {RARITY_LABELS[achievement.rarity]}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {achievement.unlocked ? '✓ Débloqué' : 'Verrouillé'}
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div className="text-2xl">🎯</div>
             </div>
-            <div className="mt-2 bg-white rounded-full h-2">
-              <div className="bg-primary-500 h-2 rounded-full" style={{ width: '60%' }}></div>
-            </div>
-          </div>
-
-          <div className="p-4 border-l-4 border-green-500 bg-green-50 rounded">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-semibold">Épargner 500€</p>
-                <p className="text-sm text-gray-600">Progression: 30%</p>
-              </div>
-              <div className="text-2xl">💰</div>
-            </div>
-            <div className="mt-2 bg-white rounded-full h-2">
-              <div className="bg-green-500 h-2 rounded-full" style={{ width: '30%' }}></div>
-            </div>
-          </div>
+          ))}
         </div>
       </Card>
     </div>
