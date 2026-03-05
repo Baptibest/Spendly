@@ -1,10 +1,11 @@
 import { supabase } from '@/lib/supabase';
 import { BudgetSettings, MonthlyScore } from '@/types/settings.types';
 
-export async function getBudgetSettings(): Promise<BudgetSettings | null> {
+export async function getBudgetSettings(userId: string): Promise<BudgetSettings | null> {
   const { data, error } = await supabase
     .from('budget_settings')
     .select('*')
+    .eq('user_id', userId)
     .single();
 
   if (error) {
@@ -18,9 +19,10 @@ export async function getBudgetSettings(): Promise<BudgetSettings | null> {
 
 export async function updateBudgetSettings(
   mode: string,
-  monthlyIncome: number
+  monthlyIncome: number,
+  userId: string
 ): Promise<BudgetSettings> {
-  const existing = await getBudgetSettings();
+  const existing = await getBudgetSettings(userId);
 
   if (existing) {
     const { data, error } = await supabase
@@ -31,6 +33,7 @@ export async function updateBudgetSettings(
         updated_at: new Date().toISOString(),
       })
       .eq('id', existing.id)
+      .eq('user_id', userId)
       .select()
       .single();
 
@@ -42,6 +45,7 @@ export async function updateBudgetSettings(
       .insert({
         mode,
         monthly_income: monthlyIncome,
+        user_id: userId,
       })
       .select()
       .single();
@@ -53,11 +57,13 @@ export async function updateBudgetSettings(
 
 export async function getMonthlyScore(
   month: number,
-  year: number
+  year: number,
+  userId: string
 ): Promise<MonthlyScore | null> {
   const { data, error } = await supabase
     .from('monthly_scores')
     .select('*')
+    .eq('user_id', userId)
     .eq('month', month)
     .eq('year', year)
     .single();
@@ -76,9 +82,10 @@ export async function saveMonthlyScore(
   year: number,
   totalIncome: number,
   totalSpent: number,
-  score: number
+  score: number,
+  userId: string
 ): Promise<MonthlyScore> {
-  const existing = await getMonthlyScore(month, year);
+  const existing = await getMonthlyScore(month, year, userId);
 
   if (existing) {
     const { data, error } = await supabase
@@ -89,6 +96,7 @@ export async function saveMonthlyScore(
         score,
       })
       .eq('id', existing.id)
+      .eq('user_id', userId)
       .select()
       .single();
 
@@ -103,6 +111,7 @@ export async function saveMonthlyScore(
         total_income: totalIncome,
         total_spent: totalSpent,
         score,
+        user_id: userId,
       })
       .select()
       .single();

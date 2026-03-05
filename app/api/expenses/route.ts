@@ -13,6 +13,14 @@ import { validateExpenseInput } from '@/utils/validation';
 
 export async function POST(request: NextRequest) {
   try {
+    const userId = request.headers.get('x-user-id');
+    if (!userId) {
+      return NextResponse.json(
+        createErrorResponse('Non authentifié'),
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
 
     const validation = validateExpenseInput(body);
@@ -23,7 +31,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const expense = await createExpense(validation.data);
+    const expense = await createExpense(validation.data, userId);
     return NextResponse.json(createSuccessResponse(expense), { status: 201 });
   } catch (error) {
     return NextResponse.json(
@@ -35,6 +43,14 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    const userId = request.headers.get('x-user-id');
+    if (!userId) {
+      return NextResponse.json(
+        createErrorResponse('Non authentifié'),
+        { status: 401 }
+      );
+    }
+
     const searchParams = request.nextUrl.searchParams;
     const month = searchParams.get('month');
     const year = searchParams.get('year');
@@ -42,14 +58,15 @@ export async function GET(request: NextRequest) {
 
     if (recent) {
       const limit = parseInt(recent, 10) || 10;
-      const expenses = await getRecentExpenses(limit);
+      const expenses = await getRecentExpenses(limit, userId);
       return NextResponse.json(createSuccessResponse(expenses));
     }
 
     if (month && year) {
       const expenses = await getExpensesByMonth(
         parseInt(month, 10),
-        parseInt(year, 10)
+        parseInt(year, 10),
+        userId
       );
       return NextResponse.json(createSuccessResponse(expenses));
     }

@@ -2,12 +2,13 @@ import { supabase } from '@/lib/supabase';
 import { Budget, CreateBudgetDTO } from '@/types/budget.types';
 
 export async function createOrUpdateBudget(
-  data: CreateBudgetDTO
+  data: CreateBudgetDTO,
+  userId: string
 ): Promise<Budget> {
   const { data: budget, error } = await supabase
     .from('budgets')
-    .upsert(data, {
-      onConflict: 'category_id,month,year',
+    .upsert({ ...data, user_id: userId }, {
+      onConflict: 'category_id,month,year,user_id',
     })
     .select()
     .single();
@@ -18,11 +19,13 @@ export async function createOrUpdateBudget(
 
 export async function getBudgetsByMonth(
   month: number,
-  year: number
+  year: number,
+  userId: string
 ): Promise<Budget[]> {
   const { data, error } = await supabase
     .from('budgets')
     .select('*')
+    .eq('user_id', userId)
     .eq('month', month)
     .eq('year', year);
 
@@ -33,12 +36,14 @@ export async function getBudgetsByMonth(
 export async function getBudgetForCategory(
   categoryId: string,
   month: number,
-  year: number
+  year: number,
+  userId: string
 ): Promise<Budget | null> {
   const { data, error } = await supabase
     .from('budgets')
     .select('*')
     .eq('category_id', categoryId)
+    .eq('user_id', userId)
     .eq('month', month)
     .eq('year', year)
     .single();
