@@ -11,6 +11,7 @@ export default function SettingsPage() {
   const router = useRouter();
   const [settings, setSettings] = useState<BudgetSettings | null>(null);
   const [user, setUser] = useState<any>(null);
+  // Page avec bouton de déconnexion
 
   useEffect(() => {
     fetchSettings();
@@ -50,11 +51,41 @@ export default function SettingsPage() {
         <h1 className="text-3xl font-bold text-gray-900">Paramètres</h1>
       </div>
 
+      <Card title="Compte utilisateur">
+        <div className="space-y-4">
+          <div className="p-4 bg-primary-50 rounded-lg border border-primary-200">
+            <p className="font-semibold text-primary-900 mb-2">
+              👤 Informations du compte
+            </p>
+            <div className="space-y-1 text-sm">
+              <p>
+                <strong>Email :</strong> {user?.email || 'Non connecté'}
+              </p>
+              <p>
+                <strong>Rôle :</strong>{' '}
+                <span className={user?.role === 'admin' ? 'text-primary-600 font-semibold' : ''}>
+                  {user?.role === 'admin' ? '👑 Administrateur' : '👤 Utilisateur'}
+                </span>
+              </p>
+            </div>
+          </div>
+          
+          <Button
+            onClick={handleLogout}
+            variant="secondary"
+            className="w-full flex items-center justify-center gap-2"
+          >
+            <LogOut size={18} />
+            Se déconnecter
+          </Button>
+        </div>
+      </Card>
+
       <Card title="Configuration actuelle">
         <div className="space-y-3 text-sm text-gray-600">
           <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
             <p className="font-semibold text-blue-900 mb-3">
-              � Informations de configuration
+              📋 Informations de configuration
             </p>
             <div className="space-y-2">
               <p>
