@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import bcrypt from 'bcryptjs';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,20 +13,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // For now, simple authentication
-    // Admin account: admin@spendly.com / admin123
-    if (email === 'admin@spendly.com' && password === 'admin123') {
-      return NextResponse.json({
-        success: true,
-        data: {
-          id: '00000000-0000-0000-0000-000000000001',
-          email: 'admin@spendly.com',
-          role: 'admin',
-        },
-      });
-    }
-
-    // Check in database for other users
+    // Check in database
     const { data: users, error } = await supabase
       .from('users')
       .select('*')
@@ -49,8 +37,10 @@ export async function POST(request: NextRequest) {
 
     const user = users[0];
 
-    // Simple password check (in production, use bcrypt)
-    if (user.password_hash !== password) {
+    // Vérifier le mot de passe avec bcrypt
+    const passwordMatch = await bcrypt.compare(password, user.password_hash);
+
+    if (!passwordMatch) {
       return NextResponse.json(
         { success: false, error: 'Email ou mot de passe incorrect' },
         { status: 401 }

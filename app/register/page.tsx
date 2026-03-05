@@ -6,16 +6,33 @@ import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Card from '@/components/ui/Card';
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    setError('');
+
+    // Validation
+    if (password.length < 6) {
+      setError('Le mot de passe doit contenir au moins 6 caractères');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Les mots de passe ne correspondent pas');
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,11 +50,13 @@ export default function LoginPage() {
         // Rediriger vers la page des dépenses
         router.push('/expenses');
       } else {
-        alert(data.error || 'Erreur de connexion');
+        setError(data.error || 'Erreur lors de l\'inscription');
       }
     } catch (error) {
-      console.error('Erreur connexion:', error);
-      alert('Erreur de connexion');
+      console.error('Erreur inscription:', error);
+      setError('Erreur lors de l\'inscription');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -46,15 +65,21 @@ export default function LoginPage() {
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Bienvenue sur <span className="text-primary-600">Spendly</span>
+            Créer un compte <span className="text-primary-600">Spendly</span>
           </h1>
           <p className="text-gray-600">
-            Connectez-vous pour accéder à votre espace
+            Commencez à gérer votre budget dès maintenant
           </p>
         </div>
 
         <Card>
-          <form onSubmit={handleLogin} className="space-y-6">
+          <form onSubmit={handleRegister} className="space-y-6">
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                {error}
+              </div>
+            )}
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Email
@@ -78,18 +103,36 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
+                minLength={6}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Au moins 6 caractères
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Confirmer le mot de passe
+              </label>
+              <Input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                minLength={6}
               />
             </div>
 
-            <Button type="submit" className="w-full">
-              Se connecter
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Inscription en cours...' : 'Créer mon compte'}
             </Button>
 
             <div className="text-center">
               <div className="mt-4 text-center text-sm text-gray-600">
-                Pas encore de compte ?{' '}
-                <a href="/register" className="text-primary-600 hover:underline font-medium">
-                  Créer un compte
+                Vous avez déjà un compte ?{' '}
+                <a href="/login" className="text-primary-600 hover:underline font-medium">
+                  Se connecter
                 </a>
               </div>
             </div>
@@ -98,7 +141,7 @@ export default function LoginPage() {
 
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-500">
-            En vous connectant, vous acceptez nos conditions d&apos;utilisation
+            En créant un compte, vous acceptez nos conditions d&apos;utilisation
           </p>
         </div>
       </div>
