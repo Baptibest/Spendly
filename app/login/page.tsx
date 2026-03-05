@@ -86,16 +86,12 @@ export default function LoginPage() {
             </Button>
 
             <div className="text-center">
-              <p className="text-sm text-gray-600">
+              <div className="mt-4 text-center text-sm text-gray-600">
                 Pas encore de compte ?{' '}
-                <button
-                  type="button"
-                  onClick={handleLogin}
-                  className="text-primary-600 hover:text-primary-700 font-medium"
-                >
+                <a href="/signup" className="text-primary-600 hover:underline font-medium">
                   Créer un compte
-                </button>
-              </p>
+                </a>
+              </div>
             </div>
           </form>
         </Card>
