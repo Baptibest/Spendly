@@ -20,11 +20,6 @@ export default function PublicNavbar() {
           {/* Logo - Far left */}
           <div className="flex-shrink-0 mr-8">
             <Link href="/home" className="flex items-center">
-              {/* Placeholder pour l'image - à remplacer par Spendly.png */}
-              <div className="text-2xl font-bold text-primary-600">
-                Spendly
-              </div>
-              {/* Décommentez quand Spendly.png sera ajouté dans public/
               <Image
                 src="/Spendly.png"
                 alt="Spendly"
@@ -32,7 +27,6 @@ export default function PublicNavbar() {
                 height={40}
                 className="h-10 w-auto"
               />
-              */}
             </Link>
           </div>
 
