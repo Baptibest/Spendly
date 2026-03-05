@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 import { Home, BarChart3, Wallet, History, Trophy, Gift, Settings } from 'lucide-react';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import clsx from 'clsx';
@@ -55,9 +56,14 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <h1 className="text-2xl font-bold text-primary-600">
-              Spendly
-            </h1>
+            <Image
+              src="/Spendly.png"
+              alt="Spendly"
+              width={120}
+              height={40}
+              priority
+              className="h-10 w-auto"
+            />
           </div>
           <div className="flex space-x-4">
             {links.map((link) => {
