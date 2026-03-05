@@ -137,13 +137,30 @@ export class AchievementService {
     const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
     const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
-    // Récupérer tous les budgets
+    // Récupérer tous les budgets avec leur date de création
     const { data: budgets } = await supabase
       .from('budgets')
-      .select('id, amount, category_id')
+      .select('id, amount, category_id, created_at')
       .eq('user_id', this.userId);
 
     if (!budgets || budgets.length === 0) return;
+
+    // Vérifier qu'au moins 1 mois s'est écoulé depuis la création du budget le plus ancien
+    const oldestBudget = budgets.reduce((oldest, budget) => {
+      const budgetDate = new Date(budget.created_at);
+      const oldestDate = new Date(oldest.created_at);
+      return budgetDate < oldestDate ? budget : oldest;
+    });
+
+    const oldestBudgetDate = new Date(oldestBudget.created_at);
+    const oneMonthAgo = new Date(now);
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
+    // Si le budget le plus ancien a moins d'1 mois, on ne vérifie pas
+    if (oldestBudgetDate > oneMonthAgo) {
+      console.log('⏳ Budgets trop récents, minimum 1 mois requis');
+      return;
+    }
 
     let allRespected = true;
 
@@ -154,8 +171,8 @@ export class AchievementService {
         .select('amount')
         .eq('user_id', this.userId)
         .eq('category_id', budget.category_id)
-        .gte('date', firstDay.toISOString())
-        .lte('date', lastDay.toISOString());
+        .gte('expense_date', firstDay.toISOString().split('T')[0])
+        .lte('expense_date', lastDay.toISOString().split('T')[0]);
 
       const totalSpent = expenses?.reduce((sum, e) => sum + e.amount, 0) || 0;
 
@@ -166,10 +183,12 @@ export class AchievementService {
     }
 
     if (allRespected && budgets.length > 0) {
+      console.log('🎉 Budget respecté pendant 1 mois minimum !');
       await this.unlockAchievement('budget-respected');
       
-      // Si tous les budgets respectés
+      // Si tous les budgets respectés (minimum 3 budgets)
       if (budgets.length >= 3) {
+        console.log('🎉 Maîtrise totale - Tous les budgets respectés !');
         await this.unlockAchievement('all-budgets-respected');
       }
     }
