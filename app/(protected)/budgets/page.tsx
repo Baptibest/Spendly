@@ -77,12 +77,38 @@ export default function BudgetsPage() {
       }
 
       if (categoriesData.success) {
-        setCategories(categoriesData.data);
-        const initialBudgets: Record<string, string> = {};
-        categoriesData.data.forEach((cat: Category) => {
-          initialBudgets[cat.id] = '0';
-        });
-        setBudgets(initialBudgets);
+        // Si l'utilisateur n'a pas de catégories, les initialiser
+        if (categoriesData.data.length === 0) {
+          console.log('Aucune catégorie trouvée, initialisation...');
+          try {
+            const initRes = await fetchWithAuth('/api/auth/init-user', {
+              method: 'POST',
+            });
+            const initData = await initRes.json();
+            if (initData.success) {
+              // Recharger les catégories
+              const newCategoriesRes = await fetchWithAuth('/api/categories');
+              const newCategoriesData = await newCategoriesRes.json();
+              if (newCategoriesData.success) {
+                setCategories(newCategoriesData.data);
+                const initialBudgets: Record<string, string> = {};
+                newCategoriesData.data.forEach((cat: Category) => {
+                  initialBudgets[cat.id] = '0';
+                });
+                setBudgets(initialBudgets);
+              }
+            }
+          } catch (err) {
+            console.error('Erreur initialisation catégories:', err);
+          }
+        } else {
+          setCategories(categoriesData.data);
+          const initialBudgets: Record<string, string> = {};
+          categoriesData.data.forEach((cat: Category) => {
+            initialBudgets[cat.id] = '0';
+          });
+          setBudgets(initialBudgets);
+        }
       }
 
       if (bankConnectionsData.success) {
