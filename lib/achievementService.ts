@@ -17,60 +17,80 @@ export class AchievementService {
 
   // Récupérer tous les succès débloqués de l'utilisateur
   async getUnlockedAchievements(): Promise<string[]> {
+    console.log('🔍 Récupération des succès pour user:', this.userId);
+    
     const { data, error } = await supabase
       .from('user_achievements')
       .select('achievement_id')
       .eq('user_id', this.userId);
 
     if (error) {
-      console.error('Erreur récupération succès:', error);
+      console.error('❌ Erreur récupération succès:', error);
       return [];
     }
 
+    console.log('✅ Succès récupérés:', data);
     return data?.map(a => a.achievement_id) || [];
   }
 
   // Débloquer un succès
   async unlockAchievement(achievementId: string): Promise<boolean> {
-    const { error } = await supabase
+    console.log('🎯 Tentative de débloquage:', achievementId, 'pour user:', this.userId);
+    
+    const { data, error } = await supabase
       .from('user_achievements')
       .insert({
         user_id: this.userId,
         achievement_id: achievementId
-      });
+      })
+      .select();
 
     if (error) {
       // Si l'erreur est due à un doublon, ce n'est pas grave
       if (error.code === '23505') {
+        console.log('⚠️ Succès déjà débloqué:', achievementId);
         return true;
       }
-      console.error('Erreur débloquage succès:', error);
+      console.error('❌ Erreur débloquage succès:', achievementId, error);
       return false;
     }
 
+    console.log('✅ Succès débloqué avec succès:', achievementId, data);
     return true;
   }
 
   // Vérifier et débloquer les succès basés sur les dépenses
   async checkExpenseAchievements(): Promise<void> {
+    console.log('💰 Vérification des succès de dépenses...');
+    
     // Récupérer le nombre total de dépenses
-    const { count: expenseCount } = await supabase
+    const { count: expenseCount, error } = await supabase
       .from('expenses')
       .select('*', { count: 'exact', head: true })
       .eq('user_id', this.userId);
 
+    if (error) {
+      console.error('❌ Erreur récupération dépenses:', error);
+      return;
+    }
+
+    console.log('📊 Nombre de dépenses:', expenseCount);
+
     // Première dépense
     if (expenseCount && expenseCount >= 1) {
+      console.log('🎉 Condition remplie: Première dépense');
       await this.unlockAchievement('first-expense');
     }
 
     // 10 dépenses
     if (expenseCount && expenseCount >= 10) {
+      console.log('🎉 Condition remplie: 10 dépenses');
       await this.unlockAchievement('10-expenses');
     }
 
     // 50 dépenses (Assidu)
     if (expenseCount && expenseCount >= 50) {
+      console.log('🎉 Condition remplie: 50 dépenses');
       await this.unlockAchievement('50-expenses');
     }
 
