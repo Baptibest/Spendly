@@ -141,11 +141,13 @@ export default function DashboardPage() {
     }
   };
 
+  // Les dépenses sont déjà filtrées par mois via l'API (ligne 103)
   const categoryTotals = calculateCategoryTotals(expenses, budgets, categories);
   const globalSummary = calculateGlobalTotals(categoryTotals);
 
   const mode = settings?.mode || 'category';
   const monthlyIncome = settings?.monthly_income || 0;
+  // totalSpent utilise expenses qui est déjà filtré par le mois sélectionné
   const totalSpent = expenses.reduce((sum, exp) => sum + exp.amount, 0);
   const savingsAmount = savings?.amount || 0;
   const score = monthlyIncome > 0 
