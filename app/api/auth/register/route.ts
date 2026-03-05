@@ -72,8 +72,6 @@ export async function POST(request: NextRequest) {
 
     if (userError) {
       console.error('Erreur création utilisateur dans table users:', userError);
-      // Supprimer l'utilisateur Auth si la création dans users échoue
-      await supabase.auth.admin.deleteUser(authData.user.id);
       return NextResponse.json(
         createErrorResponse('Erreur lors de la création du compte'),
         { status: 500 }
