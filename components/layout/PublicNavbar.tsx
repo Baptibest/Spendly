@@ -20,11 +20,9 @@ export default function PublicNavbar() {
           {/* Logo - Far left */}
           <div className="flex-shrink-0 mr-8">
             <Link href="/home" className="flex items-center">
-              <Image
+              <img
                 src="/Spendly.png"
                 alt="Spendly"
-                width={120}
-                height={40}
                 className="h-10 w-auto"
               />
             </Link>
