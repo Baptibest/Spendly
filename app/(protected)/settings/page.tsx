@@ -1,15 +1,25 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
 import { BudgetSettings } from '@/types/settings.types';
-import { Settings } from 'lucide-react';
+import { Settings, LogOut } from 'lucide-react';
 
 export default function SettingsPage() {
+  const router = useRouter();
   const [settings, setSettings] = useState<BudgetSettings | null>(null);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     fetchSettings();
+    
+    // Récupérer les informations de l'utilisateur
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      setUser(JSON.parse(userStr));
+    }
   }, []);
 
   const fetchSettings = async () => {
@@ -22,6 +32,15 @@ export default function SettingsPage() {
     } catch (err) {
       console.error('Erreur chargement paramètres:', err);
     }
+  };
+
+  const handleLogout = () => {
+    // Vider le localStorage
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('user');
+    
+    // Rediriger vers la page de connexion
+    router.push('/login');
   };
 
   return (
