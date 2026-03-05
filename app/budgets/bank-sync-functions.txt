@@ -1,0 +1,115 @@
+// Fonctions à ajouter dans budgets/page.tsx après handleCopyToNextMonth
+
+  const handleAddBankConnection = async () => {
+    if (!selectedBank || !accountNumber) {
+      setMessage('Veuillez remplir tous les champs');
+      return;
+    }
+
+    setLoading(true);
+    setMessage('');
+
+    try {
+      const res = await fetch('/api/bank-connections', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bank_name: selectedBank,
+          account_number: accountNumber,
+          account_type: accountType,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setMessage('✅ Connexion bancaire ajoutée avec succès !');
+        setShowAddBankForm(false);
+        setSelectedBank('');
+        setAccountNumber('');
+        fetchInitialData();
+        setTimeout(() => setMessage(''), 3000);
+      } else {
+        setMessage(data.error || 'Erreur lors de l\'ajout');
+      }
+    } catch (err) {
+      setMessage('Erreur de connexion');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSyncBank = async (connectionId: string) => {
+    setLoading(true);
+    setMessage('');
+
+    try {
+      const res = await fetch('/api/bank-transactions/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          connection_id: connectionId,
+          count: 10,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setMessage(`✅ ${data.data.count} nouvelles transactions importées !`);
+        fetchBankTransactions(connectionId);
+        setTimeout(() => setMessage(''), 3000);
+      } else {
+        setMessage(data.error || 'Erreur lors de la synchronisation');
+      }
+    } catch (err) {
+      setMessage('Erreur de connexion');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteBankConnection = async (id: string) => {
+    if (!confirm('Supprimer cette connexion bancaire ?')) return;
+
+    try {
+      const res = await fetch(`/api/bank-connections/${id}`, {
+        method: 'DELETE',
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setMessage('✅ Connexion supprimée');
+        fetchInitialData();
+        setTimeout(() => setMessage(''), 3000);
+      }
+    } catch (err) {
+      setMessage('Erreur lors de la suppression');
+    }
+  };
+
+  const handleCategorizeTransaction = async (transactionId: string, categoryId: string) => {
+    try {
+      const res = await fetch('/api/bank-transactions', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          transaction_id: transactionId,
+          category_id: categoryId,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setMessage('✅ Transaction catégorisée');
+        if (bankConnections.length > 0) {
+          fetchBankTransactions(bankConnections[0].id);
+        }
+        setTimeout(() => setMessage(''), 2000);
+      }
+    } catch (err) {
+      setMessage('Erreur lors de la catégorisation');
+    }
+  };
