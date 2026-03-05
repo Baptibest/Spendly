@@ -50,7 +50,10 @@ export async function getExpensesByMonth(
   userId: string
 ): Promise<ExpenseWithCategory[]> {
   const startDate = `${year}-${String(month).padStart(2, '0')}-01`;
-  const endDate = `${year}-${String(month).padStart(2, '0')}-31`;
+  
+  // Calculer le dernier jour du mois correctement
+  const lastDay = new Date(year, month, 0).getDate();
+  const endDate = `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
 
   const { data, error } = await supabase
     .from('expenses')
