@@ -109,7 +109,7 @@ export default function HistoryPage() {
       {!selectedMonth || !selectedYear ? (
         <Card>
           <p className="text-center text-gray-500 py-8">
-            Sélectionnez un mois pour voir l'historique
+            Aucune dépense pour ce mois. Ajoutez-en depuis l&apos;onglet Dépenses.
           </p>
         </Card>
       ) : loading ? (

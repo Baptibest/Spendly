@@ -614,7 +614,7 @@ export default function BudgetsPage() {
               <div className="p-3 bg-green-50 rounded-lg border border-green-200">
                 <p className="text-sm text-gray-700">
                   <strong>Progression :</strong>{' '}
-                  {((parseFloat(savingsAmount) / parseFloat(savingsTarget)) * 100).toFixed(1)}% de l'objectif atteint
+                  {((parseFloat(savingsAmount) / parseFloat(savingsTarget)) * 100).toFixed(1)}% de l&apos;objectif atteint
                 </p>
               </div>
             )}

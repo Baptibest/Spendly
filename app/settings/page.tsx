@@ -51,9 +51,7 @@ export default function SettingsPage() {
               )}
             </div>
           </div>
-          <p className="text-xs text-gray-500 mt-4">
-            💡 Pour changer de mode de gestion, allez dans l'onglet <strong>Budgets</strong>.
-          </p>
+          <p className="text-gray-600 mt-2">Configurez les paramètres de l&apos;application, allez dans l&apos;onglet <strong>Budgets</strong>.</p>
         </div>
       </Card>
 
