@@ -13,6 +13,7 @@ import { BankConnection, BankTransaction, SIMULATED_BANKS } from '@/types/bank.t
 import { getCurrentMonth, getCurrentYear, getMonthName } from '@/utils/date.utils';
 import Modal from '@/components/ui/Modal';
 import { Copy, TrendingUp, PiggyBank, Wallet, RefreshCw, Trash2, CheckCircle, Plus } from 'lucide-react';
+import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 export default function BudgetsPage() {
   const [month, setMonth] = useState(getCurrentMonth());
@@ -55,9 +56,9 @@ export default function BudgetsPage() {
     try {
       console.log('Fetching initial data...');
       const [categoriesRes, settingsRes, bankConnectionsRes] = await Promise.all([
-        fetch('/api/categories'),
-        fetch('/api/settings'),
-        fetch('/api/bank-connections'),
+        fetchWithAuth('/api/categories'),
+        fetchWithAuth('/api/settings'),
+        fetchWithAuth('/api/bank-connections'),
       ]);
 
       const [categoriesData, settingsData, bankConnectionsData] = await Promise.all([
@@ -99,7 +100,7 @@ export default function BudgetsPage() {
 
   const fetchBankTransactions = async (connectionId: string) => {
     try {
-      const res = await fetch(`/api/bank-transactions?connection_id=${connectionId}`);
+      const res = await fetchWithAuth(`/api/bank-transactions?connection_id=${connectionId}`);
       const data = await res.json();
       if (data.success) {
         setBankTransactions(data.data);
@@ -112,8 +113,8 @@ export default function BudgetsPage() {
   const fetchMonthData = async () => {
     try {
       const [budgetsRes, savingsRes] = await Promise.all([
-        fetch(`/api/budgets?month=${month}&year=${year}`),
-        fetch(`/api/savings?month=${month}&year=${year}`),
+        fetchWithAuth(`/api/budgets?month=${month}&year=${year}`),
+        fetchWithAuth(`/api/savings?month=${month}&year=${year}`),
       ]);
 
       const [budgetsData, savingsData] = await Promise.all([
@@ -149,9 +150,8 @@ export default function BudgetsPage() {
 
     try {
       const promises = Object.entries(budgets).map(([categoryId, amount]) => {
-        return fetch('/api/budgets', {
+        return fetchWithAuth('/api/budgets', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             category_id: categoryId,
             month,
@@ -175,9 +175,8 @@ export default function BudgetsPage() {
     setMessage('');
 
     try {
-      const res = await fetch('/api/settings', {
+      const res = await fetchWithAuth('/api/settings', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           mode,
           monthly_income: parseFloat(monthlyIncome) || 0,
@@ -205,9 +204,8 @@ export default function BudgetsPage() {
     setMessage('');
 
     try {
-      const res = await fetch('/api/savings', {
+      const res = await fetchWithAuth('/api/savings', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           month,
           year,
@@ -248,9 +246,8 @@ export default function BudgetsPage() {
     setMessage('');
 
     try {
-      const res = await fetch('/api/budgets/copy', {
+      const res = await fetchWithAuth('/api/budgets/copy', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           fromMonth: month,
           fromYear: year,
@@ -283,9 +280,8 @@ export default function BudgetsPage() {
     setMessage('');
 
     try {
-      const res = await fetch('/api/bank-connections', {
+      const res = await fetchWithAuth('/api/bank-connections', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           bank_name: selectedBank,
           account_number: accountNumber,
@@ -317,9 +313,8 @@ export default function BudgetsPage() {
     setMessage('');
 
     try {
-      const res = await fetch('/api/bank-transactions/sync', {
+      const res = await fetchWithAuth('/api/bank-transactions/sync', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           connection_id: connectionId,
           count: 10,
@@ -346,7 +341,7 @@ export default function BudgetsPage() {
     if (!confirm('Supprimer cette connexion bancaire ?')) return;
 
     try {
-      const res = await fetch(`/api/bank-connections/${id}`, {
+      const res = await fetchWithAuth(`/api/bank-connections/${id}`, {
         method: 'DELETE',
       });
 
@@ -364,9 +359,8 @@ export default function BudgetsPage() {
 
   const handleCategorizeTransaction = async (transactionId: string, categoryId: string) => {
     try {
-      const res = await fetch('/api/bank-transactions', {
+      const res = await fetchWithAuth('/api/bank-transactions', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           transaction_id: transactionId,
           category_id: categoryId,
@@ -392,9 +386,8 @@ export default function BudgetsPage() {
     setCategoryError('');
 
     try {
-      const res = await fetch('/api/categories', {
+      const res = await fetchWithAuth('/api/categories', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(categoryFormData),
       });
 

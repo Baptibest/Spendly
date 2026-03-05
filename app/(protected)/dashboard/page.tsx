@@ -19,6 +19,7 @@ import {
   calculateGlobalTotals,
 } from '@/utils/calculations';
 import { getCurrentMonth, getCurrentYear, getMonthName } from '@/utils/date.utils';
+import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 export default function DashboardPage() {
   const [month, setMonth] = useState(getCurrentMonth());
@@ -39,7 +40,7 @@ export default function DashboardPage() {
 
   const handleRefreshTransactions = async () => {
     try {
-      const res = await fetch('/api/bank-transactions');
+      const res = await fetchWithAuth('/api/bank-transactions');
       const data = await res.json();
       if (data.success) {
         setBankTransactions(data.data);
@@ -51,9 +52,8 @@ export default function DashboardPage() {
 
   const handleCategorizeTransaction = async (transactionId: string, categoryId: string) => {
     try {
-      const res = await fetch(`/api/bank-transactions/${transactionId}`, {
+      const res = await fetchWithAuth(`/api/bank-transactions/${transactionId}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ category_id: categoryId }),
       });
       const data = await res.json();
@@ -78,7 +78,7 @@ export default function DashboardPage() {
     }
 
     try {
-      const res = await fetch(`/api/bank-transactions/${transactionId}`, {
+      const res = await fetchWithAuth(`/api/bank-transactions/${transactionId}`, {
         method: 'DELETE',
       });
       const data = await res.json();
@@ -99,13 +99,13 @@ export default function DashboardPage() {
       const prevYear = month === 1 ? year - 1 : year;
 
       const [categoriesRes, expensesRes, budgetsRes, settingsRes, savingsRes, prevExpensesRes, bankTransactionsRes] = await Promise.all([
-        fetch('/api/categories'),
-        fetch(`/api/expenses?month=${month}&year=${year}`),
-        fetch(`/api/budgets?month=${month}&year=${year}`),
-        fetch('/api/settings'),
-        fetch(`/api/savings?month=${month}&year=${year}`),
-        fetch(`/api/expenses?month=${prevMonth}&year=${prevYear}`),
-        fetch('/api/bank-transactions'),
+        fetchWithAuth('/api/categories'),
+        fetchWithAuth(`/api/expenses?month=${month}&year=${year}`),
+        fetchWithAuth(`/api/budgets?month=${month}&year=${year}`),
+        fetchWithAuth('/api/settings'),
+        fetchWithAuth(`/api/savings?month=${month}&year=${year}`),
+        fetchWithAuth(`/api/expenses?month=${prevMonth}&year=${prevYear}`),
+        fetchWithAuth('/api/bank-transactions'),
       ]);
 
       const [categoriesData, expensesData, budgetsData, settingsData, savingsData, prevExpensesData, bankTransactionsData] = await Promise.all([

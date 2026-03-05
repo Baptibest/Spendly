@@ -67,17 +67,13 @@ export default function CategoriesPage() {
     }
   };
 
-  const handleDelete = async (id: string, name: string) => {
-    if (
-      !confirm(
-        `Êtes-vous sûr de vouloir supprimer la catégorie "${name}" ?\n\n⚠️ ATTENTION : Toutes les dépenses et budgets associés à cette catégorie seront également supprimés définitivement !`
-      )
-    ) {
+  const handleDelete = async (id: string) => {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?')) {
       return;
     }
 
     try {
-      const res = await fetch(`/api/categories/${id}`, {
+      const res = await fetchWithAuth(`/api/categories/${id}`, {
         method: 'DELETE',
       });
 
