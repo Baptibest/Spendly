@@ -20,9 +20,12 @@ export default function HistoryPage() {
   const [budgets, setBudgets] = useState<Budget[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const currentMonth = getCurrentMonth();
-  const currentYear = getCurrentYear();
+  // Utiliser la date actuelle réelle (fixe)
+  const today = new Date();
+  const currentMonth = today.getMonth() + 1;
+  const currentYear = today.getFullYear();
 
+  // Générer les 6 derniers mois à partir de la date actuelle
   const pastMonths = Array.from({ length: 6 }, (_, i) => {
     const date = new Date(currentYear, currentMonth - 1 - i, 1);
     return {
