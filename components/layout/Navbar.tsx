@@ -11,6 +11,7 @@ import clsx from 'clsx';
 export default function Navbar() {
   const pathname = usePathname();
   const [mode, setMode] = useState<'category' | 'global' | 'automatic'>('category');
+  const [profilePicture, setProfilePicture] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -25,11 +26,25 @@ export default function Navbar() {
       }
     };
     
+    // Charger la photo de profil depuis localStorage
+    const loadProfilePicture = () => {
+      const savedPicture = localStorage.getItem('profilePicture');
+      if (savedPicture && savedPicture !== '/default-avatar.png') {
+        setProfilePicture(savedPicture);
+      } else {
+        setProfilePicture(null);
+      }
+    };
+    
     // Charger les settings au montage
     fetchSettings();
+    loadProfilePicture();
     
-    // Rafraîchir toutes les 2 secondes pour détecter les changements de mode
-    const interval = setInterval(fetchSettings, 2000);
+    // Rafraîchir toutes les 2 secondes pour détecter les changements de mode et de photo
+    const interval = setInterval(() => {
+      fetchSettings();
+      loadProfilePicture();
+    }, 2000);
     
     return () => clearInterval(interval);
   }, []);
@@ -65,7 +80,7 @@ export default function Navbar() {
               className="h-14 w-auto"
             />
           </div>
-          <div className="flex space-x-4">
+          <div className="flex items-center space-x-4">
             {links.map((link) => {
               const Icon = link.icon;
               const isActive = pathname === link.href;
@@ -85,6 +100,21 @@ export default function Navbar() {
                 </Link>
               );
             })}
+            {profilePicture ? (
+              <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-300">
+                <Image
+                  src={profilePicture}
+                  alt="Photo de profil"
+                  width={40}
+                  height={40}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                <Settings size={20} />
+              </div>
+            )}
           </div>
         </div>
       </div>
