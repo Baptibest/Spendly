@@ -5,11 +5,13 @@ import { useRouter } from 'next/navigation';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { BudgetSettings } from '@/types/settings.types';
-import { Settings, LogOut } from 'lucide-react';
+import { Settings, LogOut, Sun, Moon, Monitor } from 'lucide-react';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export default function SettingsPage() {
   const router = useRouter();
+  const { theme, setTheme } = useTheme();
   const [settings, setSettings] = useState<BudgetSettings | null>(null);
   const [user, setUser] = useState<any>(null);
   // Page avec bouton de déconnexion
@@ -51,6 +53,56 @@ export default function SettingsPage() {
         <Settings size={32} className="text-primary-600" />
         <h1 className="text-3xl font-bold text-gray-900">Paramètres</h1>
       </div>
+
+      <Card title="Apparence">
+        <div className="space-y-4">
+          <div>
+            <p className="font-semibold text-gray-900 dark:text-white mb-3">
+              🎨 Thème de l'application
+            </p>
+            <div className="grid grid-cols-3 gap-3">
+              <button
+                onClick={() => setTheme('light')}
+                className={`p-4 rounded-lg border-2 transition-all ${
+                  theme === 'light'
+                    ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
+                    : 'border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-700'
+                }`}
+              >
+                <Sun className="mx-auto mb-2 text-yellow-500" size={24} />
+                <p className="text-sm font-medium text-gray-900 dark:text-white">Clair</p>
+              </button>
+              <button
+                onClick={() => setTheme('dark')}
+                className={`p-4 rounded-lg border-2 transition-all ${
+                  theme === 'dark'
+                    ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
+                    : 'border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-700'
+                }`}
+              >
+                <Moon className="mx-auto mb-2 text-indigo-500" size={24} />
+                <p className="text-sm font-medium text-gray-900 dark:text-white">Sombre</p>
+              </button>
+              <button
+                onClick={() => setTheme('system')}
+                className={`p-4 rounded-lg border-2 transition-all ${
+                  theme === 'system'
+                    ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
+                    : 'border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-700'
+                }`}
+              >
+                <Monitor className="mx-auto mb-2 text-gray-500 dark:text-gray-400" size={24} />
+                <p className="text-sm font-medium text-gray-900 dark:text-white">Système</p>
+              </button>
+            </div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
+              {theme === 'system'
+                ? 'Le thème suit les préférences de votre système'
+                : `Thème ${theme === 'light' ? 'clair' : 'sombre'} activé`}
+            </p>
+          </div>
+        </div>
+      </Card>
 
       <Card title="Compte utilisateur">
         <div className="space-y-4">
