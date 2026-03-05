@@ -21,6 +21,20 @@ interface ExpenseFormProps {
   };
 }
 
+const isValidDate = (dateStr: string) => {
+  const [year, month, day] = dateStr.split('-').map((value) => Number(value));
+
+  if (!year || !month || !day) return false;
+
+  const date = new Date(year, month - 1, day);
+
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+  );
+};
+
 export default function ExpenseForm({ onSuccess, showAccountType = false, initialData }: ExpenseFormProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [formData, setFormData] = useState({
@@ -58,6 +72,12 @@ export default function ExpenseForm({ onSuccess, showAccountType = false, initia
     setError('');
 
     try {
+      if (!isValidDate(formData.expense_date)) {
+        setError('Date invalide : vérifiez le jour choisi pour ce mois.');
+        setLoading(false);
+        return;
+      }
+
       const payload = {
         amount: parseFloat(formData.amount),
         description: formData.description,

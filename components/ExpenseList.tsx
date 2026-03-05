@@ -7,6 +7,7 @@ import Modal from '@/components/ui/Modal';
 import ExpenseForm from '@/components/forms/ExpenseForm';
 import { Trash2, Edit } from 'lucide-react';
 import { formatDate } from '@/utils/date.utils';
+import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 interface ExpenseListProps {
   expenses: ExpenseWithCategory[];
@@ -24,7 +25,7 @@ export default function ExpenseList({ expenses, onUpdate }: ExpenseListProps) {
 
     setDeletingId(id);
     try {
-      const res = await fetch(`/api/expenses/${id}`, { method: 'DELETE' });
+      const res = await fetchWithAuth(`/api/expenses/${id}`, { method: 'DELETE' });
       const data = await res.json();
       if (data.success) {
         onUpdate();
