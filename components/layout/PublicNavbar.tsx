@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 export default function PublicNavbar() {
@@ -14,30 +15,42 @@ export default function PublicNavbar() {
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Navigation links - Left side */}
-          <div className="flex items-center space-x-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center h-16">
+          {/* Logo - Far left */}
+          <div className="flex-shrink-0 mr-8">
+            <Link href="/home" className="flex items-center">
+              {/* Placeholder pour l'image - à remplacer par Spendly.png */}
+              <div className="text-2xl font-bold text-primary-600">
+                Spendly
+              </div>
+              {/* Décommentez quand Spendly.png sera ajouté dans public/
+              <Image
+                src="/Spendly.png"
+                alt="Spendly"
+                width={120}
+                height={40}
+                className="h-10 w-auto"
+              />
+              */}
+            </Link>
+          </div>
+
+          {/* Navigation links - Spread across the navbar */}
+          <div className="flex-1 flex justify-around items-center">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors ${
+                className={`text-base font-medium transition-colors px-4 py-2 rounded-md ${
                   pathname === link.href
-                    ? 'text-primary-600'
-                    : 'text-gray-700 hover:text-primary-600'
+                    ? 'text-primary-600 bg-primary-50'
+                    : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
                 }`}
               >
                 {link.label}
               </Link>
             ))}
-          </div>
-
-          {/* Logo - Right side */}
-          <div className="flex items-center">
-            <Link href="/home" className="text-2xl font-bold text-primary-600">
-              Spendly
-            </Link>
           </div>
         </div>
       </div>
