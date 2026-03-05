@@ -6,7 +6,7 @@ export default function LoginLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-blue-100">
+    <div className="min-h-screen bg-blue-50">
       <PublicNavbar />
       {children}
     </div>
