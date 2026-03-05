@@ -6,9 +6,9 @@ export default function HomeLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <div className="min-h-screen bg-blue-50">
       <PublicNavbar />
       {children}
-    </>
+    </div>
   );
 }
