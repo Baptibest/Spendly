@@ -2,16 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { BudgetSettings } from '@/types/settings.types';
-import { Settings, LogOut } from 'lucide-react';
+import { Settings, LogOut, Camera } from 'lucide-react';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 export default function SettingsPage() {
   const router = useRouter();
   const [settings, setSettings] = useState<BudgetSettings | null>(null);
   const [user, setUser] = useState<any>(null);
+  const [profilePicture, setProfilePicture] = useState<string>('/default-avatar.png');
   // Page avec bouton de déconnexion
 
   useEffect(() => {
@@ -21,6 +23,12 @@ export default function SettingsPage() {
     const userStr = localStorage.getItem('user');
     if (userStr) {
       setUser(JSON.parse(userStr));
+    }
+    
+    // Récupérer la photo de profil
+    const savedPicture = localStorage.getItem('profilePicture');
+    if (savedPicture) {
+      setProfilePicture(savedPicture);
     }
   }, []);
 
@@ -45,12 +53,63 @@ export default function SettingsPage() {
     router.push('/login');
   };
 
+  const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setProfilePicture(base64String);
+        localStorage.setItem('profilePicture', base64String);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
         <Settings size={32} className="text-primary-600" />
         <h1 className="text-3xl font-bold text-gray-900">Paramètres</h1>
       </div>
+
+      <Card title="Photo de profil">
+        <div className="flex flex-col items-center gap-4 p-4">
+          <div className="relative">
+            <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-primary-200 bg-gray-100">
+              {profilePicture !== '/default-avatar.png' ? (
+                <Image
+                  src={profilePicture}
+                  alt="Photo de profil"
+                  width={128}
+                  height={128}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-6xl text-gray-400">
+                  👤
+                </div>
+              )}
+            </div>
+            <label
+              htmlFor="profile-picture-input"
+              className="absolute bottom-0 right-0 bg-primary-600 text-white p-2 rounded-full cursor-pointer hover:bg-primary-700 transition-colors"
+            >
+              <Camera size={20} />
+            </label>
+            <input
+              id="profile-picture-input"
+              type="file"
+              accept="image/*"
+              onChange={handleProfilePictureChange}
+              className="hidden"
+            />
+          </div>
+          <p className="text-sm text-gray-600 text-center">
+            Cliquez sur l&apos;icône pour changer votre photo de profil
+          </p>
+        </div>
+      </Card>
 
       <Card title="Compte utilisateur">
         <div className="space-y-4">
