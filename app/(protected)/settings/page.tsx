@@ -58,7 +58,7 @@ export default function SettingsPage() {
         <div className="space-y-4">
           <div>
             <p className="font-semibold text-gray-900 dark:text-white mb-3">
-              🎨 Thème de l'application
+              🎨 Thème de l&apos;application
             </p>
             <div className="grid grid-cols-3 gap-3">
               <button
