@@ -73,60 +73,62 @@ export default function SettingsPage() {
         <h1 className="text-3xl font-bold text-gray-900">Paramètres</h1>
       </div>
 
-      <Card title="Photo de profil">
-        <div className="flex flex-col items-center gap-4 p-4">
-          <div className="relative">
-            <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-primary-200 bg-gray-100">
-              {profilePicture !== '/default-avatar.png' ? (
-                <Image
-                  src={profilePicture}
-                  alt="Photo de profil"
-                  width={128}
-                  height={128}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-6xl text-gray-400">
-                  👤
-                </div>
-              )}
-            </div>
-            <label
-              htmlFor="profile-picture-input"
-              className="absolute bottom-0 right-0 bg-primary-600 text-white p-2 rounded-full cursor-pointer hover:bg-primary-700 transition-colors"
-            >
-              <Camera size={20} />
-            </label>
-            <input
-              id="profile-picture-input"
-              type="file"
-              accept="image/*"
-              onChange={handleProfilePictureChange}
-              className="hidden"
-            />
-          </div>
-          <p className="text-sm text-gray-600 text-center">
-            Cliquez sur l&apos;icône pour changer votre photo de profil
-          </p>
-        </div>
-      </Card>
-
       <Card title="Compte utilisateur">
         <div className="space-y-4">
           <div className="p-4 bg-primary-50 rounded-lg border border-primary-200">
-            <p className="font-semibold text-primary-900 mb-2">
-              👤 Informations du compte
-            </p>
-            <div className="space-y-1 text-sm">
-              <p>
-                <strong>Email :</strong> {user?.email || 'Non connecté'}
-              </p>
-              <p>
-                <strong>Rôle :</strong>{' '}
-                <span className={user?.role === 'admin' ? 'text-primary-600 font-semibold' : ''}>
-                  {user?.role === 'admin' ? '👑 Administrateur' : '👤 Utilisateur'}
-                </span>
-              </p>
+            <div className="flex items-start gap-4">
+              <div className="flex-1">
+                <p className="font-semibold text-primary-900 mb-2">
+                  👤 Informations du compte
+                </p>
+                <div className="space-y-1 text-sm">
+                  <p>
+                    <strong>Email :</strong> {user?.email || 'Non connecté'}
+                  </p>
+                  <p>
+                    <strong>Rôle :</strong>{' '}
+                    <span className={user?.role === 'admin' ? 'text-primary-600 font-semibold' : ''}>
+                      {user?.role === 'admin' ? '👑 Administrateur' : '👤 Utilisateur'}
+                    </span>
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex flex-col items-center gap-2">
+                <div className="relative">
+                  <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-primary-200 bg-gray-100">
+                    {profilePicture !== '/default-avatar.png' ? (
+                      <Image
+                        src={profilePicture}
+                        alt="Photo de profil"
+                        width={96}
+                        height={96}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-5xl text-gray-400">
+                        👤
+                      </div>
+                    )}
+                  </div>
+                  <label
+                    htmlFor="profile-picture-input"
+                    className="absolute bottom-0 right-0 bg-primary-600 text-white p-1.5 rounded-full cursor-pointer hover:bg-primary-700 transition-colors"
+                  >
+                    <Camera size={16} />
+                  </label>
+                  <input
+                    id="profile-picture-input"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleProfilePictureChange}
+                    className="hidden"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 text-center max-w-[96px]">
+                  Changer la photo
+                </p>
+              </div>
             </div>
           </div>
           
