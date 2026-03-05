@@ -73,7 +73,7 @@ export default function SuccesPage() {
               randomObjectives.map((achievement) => (
                 <div
                   key={achievement.id}
-                  className={`p-3 rounded-lg border-2 ${RARITY_COLORS[achievement.rarity].border} ${RARITY_COLORS[achievement.rarity].bg}`}
+                  className={`p-3 rounded-lg border-2 h-24 flex items-center ${RARITY_COLORS[achievement.rarity].border} ${RARITY_COLORS[achievement.rarity].bg}`}
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">{achievement.icon}</span>
@@ -96,7 +96,7 @@ export default function SuccesPage() {
         {/* Statistiques par rareté */}
         <Card title="📊 Statistiques">
           <div className="space-y-3 h-full">
-            <div className="p-3 rounded-lg border-2 border-gray-300 bg-gray-100">
+            <div className="p-3 rounded-lg border-2 border-gray-300 bg-gray-100 h-24 flex flex-col justify-center">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-gray-700">Communes</p>
                 <span className="px-2 py-0.5 bg-gray-500 text-white text-xs rounded">Commune</span>
@@ -106,7 +106,7 @@ export default function SuccesPage() {
               </p>
             </div>
             
-            <div className="p-3 rounded-lg border-2 border-blue-300 bg-blue-100">
+            <div className="p-3 rounded-lg border-2 border-blue-300 bg-blue-100 h-24 flex flex-col justify-center">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-blue-700">Rares</p>
                 <span className="px-2 py-0.5 bg-blue-500 text-white text-xs rounded">Rare</span>
@@ -116,7 +116,7 @@ export default function SuccesPage() {
               </p>
             </div>
 
-            <div className="p-3 rounded-lg border-2 border-yellow-300 bg-yellow-100">
+            <div className="p-3 rounded-lg border-2 border-yellow-300 bg-yellow-100 h-24 flex flex-col justify-center">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-yellow-700">Légendaires</p>
                 <span className="px-2 py-0.5 bg-yellow-500 text-white text-xs rounded">Légendaire</span>
@@ -135,7 +135,7 @@ export default function SuccesPage() {
               topAchievements.map((achievement) => (
                 <div
                   key={achievement.id}
-                  className={`p-3 rounded-lg border-2 ${RARITY_COLORS[achievement.rarity].border} ${RARITY_COLORS[achievement.rarity].bg}`}
+                  className={`p-3 rounded-lg border-2 h-24 flex items-center ${RARITY_COLORS[achievement.rarity].border} ${RARITY_COLORS[achievement.rarity].bg}`}
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">{achievement.icon}</span>
