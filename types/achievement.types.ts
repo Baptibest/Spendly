@@ -1,4 +1,4 @@
-export type AchievementRarity = 'common' | 'rare' | 'legendary';
+export type AchievementRarity = 'common' | 'rare' | 'legendary' | 'mythic';
 
 export interface Achievement {
   id: string;
@@ -30,11 +30,18 @@ export const RARITY_COLORS = {
     text: 'text-yellow-700',
     border: 'border-yellow-300',
     badge: 'bg-yellow-500'
+  },
+  mythic: {
+    bg: 'bg-gradient-to-r from-blue-900 to-purple-900',
+    text: 'text-white',
+    border: 'border-purple-500',
+    badge: 'bg-gradient-to-r from-blue-700 to-purple-700'
   }
 };
 
 export const RARITY_LABELS = {
   common: 'Commune',
   rare: 'Rare',
-  legendary: 'Légendaire'
+  legendary: 'Légendaire',
+  mythic: 'Mythique'
 };

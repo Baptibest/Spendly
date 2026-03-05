@@ -131,7 +131,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     title: 'Perfectionniste',
     description: 'Débloquez tous les autres succès',
     icon: '⭐',
-    rarity: 'legendary',
+    rarity: 'mythic',
     unlocked: false
   },
   {
