@@ -8,11 +8,11 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
+          50: '#f0f7f7',
+          100: '#d9ebec',
+          500: '#76a5a6',
+          600: '#5e8485',
+          700: '#4a6768',
         },
         success: '#10b981',
         warning: '#f59e0b',
