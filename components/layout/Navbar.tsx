@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, BarChart3, Wallet, History, Trophy, Settings } from 'lucide-react';
+import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import clsx from 'clsx';
 
 export default function Navbar() {
@@ -13,13 +14,13 @@ export default function Navbar() {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const res = await fetch('/api/settings');
+        const res = await fetchWithAuth('/api/settings');
         const data = await res.json();
         if (data.success && data.data) {
           setMode(data.data.mode);
         }
       } catch (err) {
-        console.error('Erreur chargement settings:', err);
+        console.error('Erreur chargement paramètres:', err);
       }
     };
     

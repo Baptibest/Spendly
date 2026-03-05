@@ -7,6 +7,7 @@ import ExpenseList from '@/components/ExpenseList';
 import { ExpenseWithCategory } from '@/types/expense.types';
 import { BudgetSettings } from '@/types/settings.types';
 import { getCurrentMonth, getCurrentYear, getMonthName } from '@/utils/date.utils';
+import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 export default function HomePage() {
   const [expenses, setExpenses] = useState<ExpenseWithCategory[]>([]);
@@ -23,8 +24,8 @@ export default function HomePage() {
     setLoading(true);
     try {
       const [expensesRes, settingsRes] = await Promise.all([
-        fetch('/api/expenses?recent=10'),
-        fetch('/api/settings'),
+        fetchWithAuth('/api/expenses?recent=10'),
+        fetchWithAuth('/api/settings'),
       ]);
 
       const [expensesData, settingsData] = await Promise.all([

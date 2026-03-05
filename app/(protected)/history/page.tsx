@@ -11,6 +11,7 @@ import {
   calculateGlobalTotals,
 } from '@/utils/calculations';
 import { getCurrentMonth, getCurrentYear, getMonthName } from '@/utils/date.utils';
+import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 export default function HistoryPage() {
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
@@ -46,7 +47,7 @@ export default function HistoryPage() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch('/api/categories');
+      const res = await fetchWithAuth('/api/categories');
       const data = await res.json();
       if (data.success) setCategories(data.data);
     } catch (err) {
@@ -64,8 +65,8 @@ export default function HistoryPage() {
     
     try {
       const [expensesRes, budgetsRes] = await Promise.all([
-        fetch(`/api/expenses?month=${selectedMonth}&year=${selectedYear}`),
-        fetch(`/api/budgets?month=${selectedMonth}&year=${selectedYear}`),
+        fetchWithAuth(`/api/expenses?month=${selectedMonth}&year=${selectedYear}`),
+        fetchWithAuth(`/api/budgets?month=${selectedMonth}&year=${selectedYear}`),
       ]);
 
       const [expensesData, budgetsData] = await Promise.all([

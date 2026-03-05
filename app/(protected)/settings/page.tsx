@@ -6,6 +6,7 @@ import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { BudgetSettings } from '@/types/settings.types';
 import { Settings, LogOut } from 'lucide-react';
+import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function SettingsPage() {
 
   const fetchSettings = async () => {
     try {
-      const res = await fetch('/api/settings');
+      const res = await fetchWithAuth('/api/settings');
       const data = await res.json();
       if (data.success && data.data) {
         setSettings(data.data);

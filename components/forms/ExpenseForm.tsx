@@ -6,6 +6,7 @@ import Select from '@/components/ui/Select';
 import Button from '@/components/ui/Button';
 import { Category } from '@/types/category.types';
 import { formatDateForInput } from '@/utils/date.utils';
+import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 interface ExpenseFormProps {
   onSuccess?: () => void;
@@ -38,7 +39,7 @@ export default function ExpenseForm({ onSuccess, showAccountType = false, initia
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch('/api/categories');
+      const res = await fetchWithAuth('/api/categories');
       const data = await res.json();
       if (data.success) {
         setCategories(data.data);
@@ -70,9 +71,8 @@ export default function ExpenseForm({ onSuccess, showAccountType = false, initia
         : '/api/expenses';
       const method = initialData?.id ? 'PUT' : 'POST';
 
-      const res = await fetch(url, {
+      const res = await fetchWithAuth(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 

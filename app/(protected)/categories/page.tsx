@@ -7,6 +7,7 @@ import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 import { Category } from '@/types/category.types';
 import { Trash2, Plus } from 'lucide-react';
+import { fetchWithAuth } from '@/utils/fetchWithAuth';
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -27,7 +28,7 @@ export default function CategoriesPage() {
   const fetchCategories = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/categories');
+      const res = await fetchWithAuth('/api/categories');
       const data = await res.json();
       if (data.success) {
         setCategories(data.data);
@@ -45,9 +46,8 @@ export default function CategoriesPage() {
     setSuccess('');
 
     try {
-      const res = await fetch('/api/categories', {
+      const res = await fetchWithAuth('/api/categories', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
