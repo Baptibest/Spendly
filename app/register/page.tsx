@@ -43,11 +43,12 @@ export default function RegisterPage() {
       const data = await response.json();
 
       if (data.success) {
-        // Afficher le message de succès
-        setSuccess(true);
-        setEmail('');
-        setPassword('');
-        setConfirmPassword('');
+        // Stocker les informations de l'utilisateur
+        localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem('user', JSON.stringify(data.data));
+        
+        // Rediriger vers la page des dépenses
+        router.push('/expenses');
       } else {
         setError(data.error || 'Erreur lors de l\'inscription');
       }
@@ -136,7 +137,6 @@ export default function RegisterPage() {
               </div>
             </div>
           </form>
-          )}
         </Card>
 
         <div className="mt-6 text-center">
