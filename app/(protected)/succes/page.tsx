@@ -68,7 +68,7 @@ export default function SuccesPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Objectifs - 3 succès aléatoires non réalisés */}
         <Card title="🎯 Objectifs">
-          <div className="space-y-3">
+          <div className="space-y-3 h-full">
             {randomObjectives.length > 0 ? (
               randomObjectives.map((achievement) => (
                 <div
@@ -95,7 +95,7 @@ export default function SuccesPage() {
 
         {/* Statistiques par rareté */}
         <Card title="📊 Statistiques">
-          <div className="space-y-3">
+          <div className="space-y-3 h-full">
             <div className="p-3 rounded-lg border-2 border-gray-300 bg-gray-100">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-gray-700">Communes</p>
@@ -130,7 +130,7 @@ export default function SuccesPage() {
 
         {/* Meilleurs succès - 3 meilleurs réalisés */}
         <Card title="🎖️ Meilleurs Succès">
-          <div className="space-y-3">
+          <div className="space-y-3 h-full">
             {topAchievements.length > 0 ? (
               topAchievements.map((achievement) => (
                 <div
@@ -166,7 +166,7 @@ export default function SuccesPage() {
               className={`p-4 rounded-lg border-2 ${
                 achievement.unlocked
                   ? `${RARITY_COLORS[achievement.rarity].border} ${RARITY_COLORS[achievement.rarity].bg}`
-                  : 'border-gray-200 bg-gray-50 opacity-60'
+                  : `${RARITY_COLORS[achievement.rarity].border} ${RARITY_COLORS[achievement.rarity].bg} opacity-60`
               }`}
             >
               <div className="flex items-start gap-3">
