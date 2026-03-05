@@ -1,21 +1,34 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import Card from '@/components/ui/Card';
-import { Trophy } from 'lucide-react';
-import { ACHIEVEMENTS } from '@/data/achievements';
+import { Trophy, RefreshCw } from 'lucide-react';
 import { Achievement, RARITY_COLORS, RARITY_LABELS } from '@/types/achievement.types';
+import { useAchievements } from '@/hooks/useAchievements';
 
 export default function SuccesPage() {
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Récupérer l'ID utilisateur depuis localStorage
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      setUserId(user.id);
+    }
+  }, []);
+
+  const { achievements, loading, refreshAchievements } = useAchievements(userId);
+
   // Séparer les succès par statut
   const unlockedAchievements = useMemo(() => 
-    ACHIEVEMENTS.filter(a => a.unlocked),
-    []
+    achievements.filter(a => a.unlocked),
+    [achievements]
   );
   
   const lockedAchievements = useMemo(() => 
-    ACHIEVEMENTS.filter(a => !a.unlocked),
-    []
+    achievements.filter(a => !a.unlocked),
+    [achievements]
   );
 
   // 3 objectifs aléatoires parmi les non réalisés
@@ -34,9 +47,9 @@ export default function SuccesPage() {
 
   // Statistiques par rareté
   const stats = useMemo(() => {
-    const common = ACHIEVEMENTS.filter(a => a.rarity === 'common');
-    const rare = ACHIEVEMENTS.filter(a => a.rarity === 'rare');
-    const legendary = ACHIEVEMENTS.filter(a => a.rarity === 'legendary');
+    const common = achievements.filter(a => a.rarity === 'common');
+    const rare = achievements.filter(a => a.rarity === 'rare');
+    const legendary = achievements.filter(a => a.rarity === 'legendary');
 
     return {
       common: {
@@ -52,17 +65,27 @@ export default function SuccesPage() {
         total: legendary.length
       }
     };
-  }, []);
+  }, [achievements]);
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">
-          🏆 Succès
-        </h1>
-        <p className="text-gray-600 mt-2">
-          Suivez vos accomplissements et objectifs atteints
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">
+            🏆 Succès
+          </h1>
+          <p className="text-gray-600 mt-2">
+            Suivez vos accomplissements et objectifs atteints
+          </p>
+        </div>
+        <button
+          onClick={refreshAchievements}
+          disabled={loading}
+          className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <RefreshCw className={loading ? 'animate-spin' : ''} size={20} />
+          {loading ? 'Vérification...' : 'Vérifier les succès'}
+        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -158,9 +181,9 @@ export default function SuccesPage() {
       </div>
 
       {/* Tous les succès */}
-      <Card title="� Tous les Succès">
+      <Card title="🏆 Tous les Succès">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {ACHIEVEMENTS.map((achievement) => (
+          {achievements.map((achievement) => (
             <div
               key={achievement.id}
               className={`p-4 rounded-lg border-2 ${
