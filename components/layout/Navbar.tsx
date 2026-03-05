@@ -33,7 +33,7 @@ export default function Navbar() {
   }, []);
 
   const allLinks = [
-    { href: '/', label: 'Dépenses', icon: Home, hideInAutomatic: true },
+    { href: '/expenses', label: 'Dépenses', icon: Home, hideInAutomatic: true },
     { href: '/dashboard', label: 'Dashboard', icon: BarChart3 },
     { href: '/budgets', label: 'Budgets', icon: Wallet },
     { href: '/history', label: 'Historique', icon: History },
@@ -54,7 +54,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <h1 className="text-2xl font-bold text-primary-600">
-              Budget App
+              Spendly
             </h1>
           </div>
           <div className="flex space-x-4">
