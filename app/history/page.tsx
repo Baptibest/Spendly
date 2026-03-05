@@ -57,7 +57,11 @@ export default function HistoryPage() {
   const fetchMonthData = async () => {
     if (!selectedMonth || !selectedYear) return;
 
+    // Réinitialiser les données avant de charger les nouvelles
+    setExpenses([]);
+    setBudgets([]);
     setLoading(true);
+    
     try {
       const [expensesRes, budgetsRes] = await Promise.all([
         fetch(`/api/expenses?month=${selectedMonth}&year=${selectedYear}`),
