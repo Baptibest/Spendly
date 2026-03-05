@@ -177,17 +177,22 @@ export class AchievementService {
 
   // Vérifier les dépenses quotidiennes consécutives
   private async checkDailyExpenseStreak(): Promise<void> {
-    const { data: expenses } = await supabase
+    const { data: expenses, error } = await supabase
       .from('expenses')
-      .select('date')
+      .select('expense_date')
       .eq('user_id', this.userId)
-      .order('date', { ascending: false })
+      .order('expense_date', { ascending: false })
       .limit(10);
+    
+    if (error) {
+      console.error('❌ Erreur vérification streak:', error);
+      return;
+    }
 
     if (!expenses || expenses.length < 5) return;
 
     // Vérifier si on a une dépense par jour pendant 5 jours consécutifs
-    const dates = expenses.map(e => new Date(e.date).toDateString());
+    const dates = expenses.map(e => new Date(e.expense_date).toDateString());
     const uniqueDates = [...new Set(dates)];
 
     if (uniqueDates.length >= 5) {
@@ -216,11 +221,16 @@ export class AchievementService {
     const fiveDaysAgo = new Date();
     fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
 
-    const { count } = await supabase
+    const { count, error } = await supabase
       .from('expenses')
       .select('*', { count: 'exact', head: true })
       .eq('user_id', this.userId)
-      .gte('date', fiveDaysAgo.toISOString());
+      .gte('expense_date', fiveDaysAgo.toISOString().split('T')[0]);
+    
+    if (error) {
+      console.error('❌ Erreur vérification no expense:', error);
+      return;
+    }
 
     if (count === 0) {
       await this.unlockAchievement('no-expense-5-days');
