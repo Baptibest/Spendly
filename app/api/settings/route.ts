@@ -19,7 +19,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const settings = await getBudgetSettings(userId);
+    let settings = await getBudgetSettings(userId);
+    
+    // Si l'utilisateur n'a pas de settings, créer des settings par défaut
+    if (!settings) {
+      settings = await updateBudgetSettings('category', 0, userId);
+    }
+    
     return NextResponse.json(createSuccessResponse(settings));
   } catch (error) {
     return NextResponse.json(
