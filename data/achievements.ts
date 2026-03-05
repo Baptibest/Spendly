@@ -31,7 +31,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     title: 'Une semaine',
     description: 'Connectez-vous 7 jours consécutifs',
     icon: '📅',
-    rarity: 'common',
+    rarity: 'rare',
     unlocked: false
   },
   {
@@ -73,7 +73,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     title: 'Assidu',
     description: 'Enregistrez 50 dépenses',
     icon: '💪',
-    rarity: 'rare',
+    rarity: 'common',
     unlocked: false
   },
   {
@@ -81,7 +81,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     title: 'Maîtrise totale',
     description: 'Respectez tous vos budgets pendant un mois',
     icon: '👑',
-    rarity: 'rare',
+    rarity: 'legendary',
     unlocked: false
   },
   {
@@ -139,6 +139,30 @@ export const ACHIEVEMENTS: Achievement[] = [
     title: 'Liberté financière',
     description: 'Atteignez un solde positif de 5000€',
     icon: '🎊',
+    rarity: 'legendary',
+    unlocked: false
+  },
+  {
+    id: 'broke-500',
+    title: 'C\'est la dèche',
+    description: 'Terminez avec 500€ en négatif',
+    icon: '💸',
+    rarity: 'legendary',
+    unlocked: false
+  },
+  {
+    id: 'no-expense-5-days',
+    title: 'Vous êtes un Rat',
+    description: 'Aucune dépense pendant 5 jours',
+    icon: '🐀',
+    rarity: 'legendary',
+    unlocked: false
+  },
+  {
+    id: 'daily-expense-5-days',
+    title: 'Cochon qui Flambe',
+    description: 'Une dépense par jour pendant 5 jours',
+    icon: '🔥',
     rarity: 'legendary',
     unlocked: false
   }
