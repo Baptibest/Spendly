@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import bcrypt from 'bcryptjs';
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,37 +12,47 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check in database
-    const { data: users, error } = await supabase
+    // Se connecter avec Supabase Auth
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (authError) {
+      console.error('Erreur Supabase Auth:', authError);
+      return NextResponse.json(
+        { success: false, error: 'Email ou mot de passe incorrect' },
+        { status: 401 }
+      );
+    }
+
+    if (!authData.user) {
+      return NextResponse.json(
+        { success: false, error: 'Email ou mot de passe incorrect' },
+        { status: 401 }
+      );
+    }
+
+    // Vérifier que l'email est confirmé
+    if (!authData.user.email_confirmed_at) {
+      return NextResponse.json(
+        { success: false, error: 'Veuillez confirmer votre email avant de vous connecter. Vérifiez votre boîte de réception.' },
+        { status: 403 }
+      );
+    }
+
+    // Récupérer les informations de l'utilisateur depuis la table users
+    const { data: user, error: userError } = await supabase
       .from('users')
       .select('*')
-      .eq('email', email)
-      .limit(1);
+      .eq('id', authData.user.id)
+      .single();
 
-    if (error) {
-      console.error('Erreur Supabase:', error);
+    if (userError || !user) {
+      console.error('Erreur récupération utilisateur:', userError);
       return NextResponse.json(
         { success: false, error: 'Erreur serveur' },
         { status: 500 }
-      );
-    }
-
-    if (!users || users.length === 0) {
-      return NextResponse.json(
-        { success: false, error: 'Email ou mot de passe incorrect' },
-        { status: 401 }
-      );
-    }
-
-    const user = users[0];
-
-    // Vérifier le mot de passe avec bcrypt
-    const passwordMatch = await bcrypt.compare(password, user.password_hash);
-
-    if (!passwordMatch) {
-      return NextResponse.json(
-        { success: false, error: 'Email ou mot de passe incorrect' },
-        { status: 401 }
       );
     }
 
@@ -53,6 +62,7 @@ export async function POST(request: NextRequest) {
         id: user.id,
         email: user.email,
         role: user.role,
+        session: authData.session,
       },
     });
   } catch (error) {
