@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         data: {
-          id: '1',
+          id: '00000000-0000-0000-0000-000000000001',
           email: 'admin@spendly.com',
           role: 'admin',
         },
