@@ -19,10 +19,6 @@ export default function ExpenseList({ expenses, onUpdate }: ExpenseListProps) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cette dépense ?')) {
-      return;
-    }
-
     setDeletingId(id);
     try {
       const res = await fetchWithAuth(`/api/expenses/${id}`, { method: 'DELETE' });
