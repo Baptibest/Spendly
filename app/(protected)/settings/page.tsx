@@ -173,7 +173,7 @@ export default function SettingsPage() {
             <strong>Application :</strong> Budget App
           </p>
           <p>
-            <strong>Version :</strong> 1.0.0 - Phase 1 MVP
+            <strong>Version :</strong> Close Alpha Test - Phase 1 MVP
           </p>
           <p>
             <strong>Fonctionnalités :</strong>
