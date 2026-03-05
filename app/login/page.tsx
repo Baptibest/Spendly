@@ -11,15 +11,34 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Pour l'instant, connexion simple sans authentification réelle
-    // On stocke juste un flag dans le localStorage
-    localStorage.setItem('isAuthenticated', 'true');
-    
-    // Rediriger vers la page des dépenses (l'ancienne page d'accueil)
-    router.push('/');
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Stocker les informations de l'utilisateur
+        localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem('user', JSON.stringify(data.data));
+        
+        // Rediriger vers la page des dépenses
+        router.push('/expenses');
+      } else {
+        alert(data.error || 'Erreur de connexion');
+      }
+    } catch (error) {
+      console.error('Erreur connexion:', error);
+      alert('Erreur de connexion');
+    }
   };
 
   return (
