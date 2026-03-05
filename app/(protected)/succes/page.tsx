@@ -24,9 +24,9 @@ export default function SuccesPage() {
     return shuffled.slice(0, 3);
   }, [lockedAchievements]);
 
-  // 3 meilleurs succès réalisés (légendaires > rares > communs)
+  // 3 meilleurs succès réalisés (mythique > légendaires > rares > communs)
   const topAchievements = useMemo(() => {
-    const rarityOrder = { legendary: 3, rare: 2, common: 1 };
+    const rarityOrder = { mythic: 4, legendary: 3, rare: 2, common: 1 };
     return [...unlockedAchievements]
       .sort((a, b) => rarityOrder[b.rarity] - rarityOrder[a.rarity])
       .slice(0, 3);
