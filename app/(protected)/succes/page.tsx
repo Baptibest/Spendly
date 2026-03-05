@@ -164,27 +164,49 @@ export default function SuccesPage() {
             <div
               key={achievement.id}
               className={`p-4 rounded-lg border-2 ${
-                achievement.unlocked
-                  ? `${RARITY_COLORS[achievement.rarity].border} ${RARITY_COLORS[achievement.rarity].bg}`
-                  : `${RARITY_COLORS[achievement.rarity].border} ${RARITY_COLORS[achievement.rarity].bg} opacity-60`
+                achievement.rarity === 'mythic'
+                  ? 'border-purple-500'
+                  : RARITY_COLORS[achievement.rarity].border
+              } ${
+                achievement.rarity === 'mythic'
+                  ? ''
+                  : RARITY_COLORS[achievement.rarity].bg
+              } ${
+                achievement.unlocked ? '' : 'opacity-60'
               }`}
+              style={
+                achievement.rarity === 'mythic'
+                  ? {
+                      background: 'linear-gradient(to right, #1e3a8a, #581c87)',
+                    }
+                  : undefined
+              }
             >
               <div className="flex items-start gap-3">
                 <span className="text-3xl">{achievement.icon}</span>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
-                    <p className="font-semibold">{achievement.title}</p>
+                    <p className={`font-semibold ${achievement.rarity === 'mythic' ? 'text-white' : ''}`}>{achievement.title}</p>
                     {achievement.unlocked && (
                       <Trophy className="text-yellow-500" size={20} />
                     )}
                   </div>
-                  <p className="text-xs text-gray-600 mt-1">{achievement.description}</p>
+                  <p className={`text-xs mt-1 ${achievement.rarity === 'mythic' ? 'text-purple-200' : 'text-gray-600'}`}>{achievement.description}</p>
                   <div className="flex items-center gap-2 mt-2">
-                    <span className={`px-2 py-0.5 rounded text-xs text-white ${
-                      achievement.unlocked
-                        ? RARITY_COLORS[achievement.rarity].badge
-                        : 'bg-gray-400'
-                    }`}>
+                    <span 
+                      className={`px-2 py-0.5 rounded text-xs text-white ${
+                        achievement.unlocked && achievement.rarity !== 'mythic'
+                          ? RARITY_COLORS[achievement.rarity].badge
+                          : achievement.rarity !== 'mythic' ? 'bg-gray-400' : ''
+                      }`}
+                      style={
+                        achievement.rarity === 'mythic'
+                          ? {
+                              background: 'linear-gradient(to right, #1d4ed8, #7e22ce)',
+                            }
+                          : undefined
+                      }
+                    >
                       {RARITY_LABELS[achievement.rarity]}
                     </span>
                     <span className="text-xs text-gray-500">
