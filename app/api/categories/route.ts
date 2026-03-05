@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getAllCategories, createCategory } from '@/services/category.service';
 import {
   createSuccessResponse,
@@ -6,9 +6,17 @@ import {
   handleSupabaseError,
 } from '@/utils/errorHandler';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const categories = await getAllCategories();
+    const userId = request.headers.get('x-user-id');
+    if (!userId) {
+      return NextResponse.json(
+        createErrorResponse('Non authentifié'),
+        { status: 401 }
+      );
+    }
+
+    const categories = await getAllCategories(userId);
     return NextResponse.json(createSuccessResponse(categories));
   } catch (error) {
     return NextResponse.json(
@@ -18,8 +26,16 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    const userId = request.headers.get('x-user-id');
+    if (!userId) {
+      return NextResponse.json(
+        createErrorResponse('Non authentifié'),
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const { name, color, icon } = body;
 
@@ -30,7 +46,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const category = await createCategory(name, color, icon);
+    const category = await createCategory(name, color, userId, icon);
     return NextResponse.json(createSuccessResponse(category), { status: 201 });
   } catch (error) {
     return NextResponse.json(

@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { deleteCategory } from '@/services/category.service';
 import {
   createSuccessResponse,
@@ -7,11 +7,19 @@ import {
 } from '@/utils/errorHandler';
 
 export async function DELETE(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    await deleteCategory(params.id);
+    const userId = request.headers.get('x-user-id');
+    if (!userId) {
+      return NextResponse.json(
+        createErrorResponse('Non authentifié'),
+        { status: 401 }
+      );
+    }
+
+    await deleteCategory(params.id, userId);
     return NextResponse.json(
       createSuccessResponse({ message: 'Catégorie supprimée avec succès' })
     );

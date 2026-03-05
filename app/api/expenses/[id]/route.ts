@@ -11,8 +11,16 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
+    const userId = request.headers.get('x-user-id');
+    if (!userId) {
+      return NextResponse.json(
+        createErrorResponse('Non authentifié'),
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
-    const expense = await updateExpense(params.id, body);
+    const expense = await updateExpense(params.id, body, userId);
     return NextResponse.json(createSuccessResponse(expense));
   } catch (error) {
     return NextResponse.json(
@@ -27,7 +35,15 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    await deleteExpense(params.id);
+    const userId = request.headers.get('x-user-id');
+    if (!userId) {
+      return NextResponse.json(
+        createErrorResponse('Non authentifié'),
+        { status: 401 }
+      );
+    }
+
+    await deleteExpense(params.id, userId);
     return NextResponse.json(
       createSuccessResponse({ message: 'Dépense supprimée' })
     );

@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import {
   getBudgetSettings,
   updateBudgetSettings,
@@ -9,9 +9,17 @@ import {
   handleSupabaseError,
 } from '@/utils/errorHandler';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const settings = await getBudgetSettings();
+    const userId = request.headers.get('x-user-id');
+    if (!userId) {
+      return NextResponse.json(
+        createErrorResponse('Non authentifié'),
+        { status: 401 }
+      );
+    }
+
+    const settings = await getBudgetSettings(userId);
     return NextResponse.json(createSuccessResponse(settings));
   } catch (error) {
     return NextResponse.json(
@@ -21,8 +29,16 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    const userId = request.headers.get('x-user-id');
+    if (!userId) {
+      return NextResponse.json(
+        createErrorResponse('Non authentifié'),
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const { mode, monthly_income } = body;
 
@@ -40,7 +56,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const settings = await updateBudgetSettings(mode, monthly_income || 0);
+    const settings = await updateBudgetSettings(mode, monthly_income || 0, userId);
     return NextResponse.json(createSuccessResponse(settings));
   } catch (error) {
     return NextResponse.json(
