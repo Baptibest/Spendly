@@ -97,7 +97,16 @@ export default function SuccesPage() {
               randomObjectives.map((achievement) => (
                 <div
                   key={achievement.id}
-                  className={`p-3 rounded-lg border-2 h-24 flex items-center ${RARITY_COLORS[achievement.rarity].border} ${RARITY_COLORS[achievement.rarity].bg}`}
+                  className={`p-3 rounded-lg border-2 h-24 flex items-center ${RARITY_COLORS[achievement.rarity].border} ${
+                    achievement.rarity === 'mythic' ? '' : RARITY_COLORS[achievement.rarity].bg
+                  }`}
+                  style={
+                    achievement.rarity === 'mythic'
+                      ? {
+                          background: 'linear-gradient(to right, #1e3a8a, #581c87)',
+                        }
+                      : undefined
+                  }
                 >
                   <div className="flex items-center gap-3">
                     {achievement.icon.startsWith('/') ? (
@@ -106,9 +115,20 @@ export default function SuccesPage() {
                       <span className="text-2xl">{achievement.icon}</span>
                     )}
                     <div className="flex-1">
-                      <p className="font-medium">{achievement.title}</p>
-                      <p className="text-xs text-gray-600">{achievement.description}</p>
-                      <span className={`inline-block mt-1 px-2 py-0.5 rounded text-xs text-white ${RARITY_COLORS[achievement.rarity].badge}`}>
+                      <p className={`font-medium ${achievement.rarity === 'mythic' ? 'text-white' : ''}`}>{achievement.title}</p>
+                      <p className={`text-xs ${achievement.rarity === 'mythic' ? 'text-purple-200' : 'text-gray-600'}`}>{achievement.description}</p>
+                      <span 
+                        className={`inline-block mt-1 px-2 py-0.5 rounded text-xs text-white ${
+                          achievement.rarity === 'mythic' ? '' : RARITY_COLORS[achievement.rarity].badge
+                        }`}
+                        style={
+                          achievement.rarity === 'mythic'
+                            ? {
+                                background: 'linear-gradient(to right, #4c1d95, #5b21b6)',
+                              }
+                            : undefined
+                        }
+                      >
                         {RARITY_LABELS[achievement.rarity]}
                       </span>
                     </div>
@@ -163,7 +183,16 @@ export default function SuccesPage() {
               topAchievements.map((achievement) => (
                 <div
                   key={achievement.id}
-                  className={`p-3 rounded-lg border-2 h-24 flex items-center ${RARITY_COLORS[achievement.rarity].border} ${RARITY_COLORS[achievement.rarity].bg}`}
+                  className={`p-3 rounded-lg border-2 h-24 flex items-center ${RARITY_COLORS[achievement.rarity].border} ${
+                    achievement.rarity === 'mythic' ? '' : RARITY_COLORS[achievement.rarity].bg
+                  }`}
+                  style={
+                    achievement.rarity === 'mythic'
+                      ? {
+                          background: 'linear-gradient(to right, #1e3a8a, #581c87)',
+                        }
+                      : undefined
+                  }
                 >
                   <div className="flex items-center gap-3">
                     {achievement.icon.startsWith('/') ? (
@@ -172,9 +201,20 @@ export default function SuccesPage() {
                       <span className="text-2xl">{achievement.icon}</span>
                     )}
                     <div className="flex-1">
-                      <p className="font-medium">{achievement.title}</p>
-                      <p className="text-xs text-gray-600">{achievement.description}</p>
-                      <span className={`inline-block mt-1 px-2 py-0.5 rounded text-xs text-white ${RARITY_COLORS[achievement.rarity].badge}`}>
+                      <p className={`font-medium ${achievement.rarity === 'mythic' ? 'text-white' : ''}`}>{achievement.title}</p>
+                      <p className={`text-xs ${achievement.rarity === 'mythic' ? 'text-purple-200' : 'text-gray-600'}`}>{achievement.description}</p>
+                      <span 
+                        className={`inline-block mt-1 px-2 py-0.5 rounded text-xs text-white ${
+                          achievement.rarity === 'mythic' ? '' : RARITY_COLORS[achievement.rarity].badge
+                        }`}
+                        style={
+                          achievement.rarity === 'mythic'
+                            ? {
+                                background: 'linear-gradient(to right, #4c1d95, #5b21b6)',
+                              }
+                            : undefined
+                        }
+                      >
                         {RARITY_LABELS[achievement.rarity]}
                       </span>
                     </div>
