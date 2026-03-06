@@ -8,7 +8,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     description: 'Créer un compte',
     icon: '/Spendly - Logo.png',
     rarity: 'common',
-    unlocked: false
+    unlocked: true
   },
   {
     id: 'first-expense',
