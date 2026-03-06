@@ -161,7 +161,7 @@ export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'daily-expense-5-days',
     title: 'Cochon qui Flambe',
-    description: 'Une dépense par jour pendant 5 jours',
+    description: 'Dépasser votre budget établi',
     icon: '/Cochon Monocle.png',
     rarity: 'legendary',
     unlocked: false
