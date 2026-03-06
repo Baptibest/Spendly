@@ -274,6 +274,9 @@ export class AchievementService {
 
   // Vérifier tous les succès
   async checkAllAchievements(): Promise<void> {
+    // Débloquer automatiquement le succès Bienvenue pour tous les utilisateurs
+    await this.unlockAchievement('welcome');
+
     await Promise.all([
       this.checkExpenseAchievements(),
       this.checkBudgetAchievements(),
@@ -283,7 +286,7 @@ export class AchievementService {
 
     // Vérifier le succès Perfectionniste (tous les autres débloqués)
     const unlockedIds = await this.getUnlockedAchievements();
-    if (unlockedIds.length >= 19) { // 20 succès - 1 (Perfectionniste)
+    if (unlockedIds.length >= 20) { // 21 succès - 1 (Perfectionniste)
       await this.unlockAchievement('all-achievements');
     }
   }
