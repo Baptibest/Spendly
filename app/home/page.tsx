@@ -86,7 +86,7 @@ export default function HomePage() {
             Spendly
           </p>
           <Link href="/login">
-            <Button className="bg-white text-primary-600 hover:bg-gray-100 px-8 py-3 text-lg">
+            <Button variant="primary" className="px-8 py-3 text-lg">
               Commencer maintenant
             </Button>
           </Link>
