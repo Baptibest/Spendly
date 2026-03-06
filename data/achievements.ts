@@ -6,7 +6,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     id: 'welcome',
     title: 'Bienvenue',
     description: 'Créer un compte',
-    icon: '/Spendly.png',
+    icon: '/Spendly - Logo.png',
     rarity: 'common',
     unlocked: false
   },
