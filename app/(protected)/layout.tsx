@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
+import BottomNav from '@/components/layout/BottomNav';
 
 export default function ProtectedLayout({
   children,
@@ -25,9 +26,10 @@ export default function ProtectedLayout({
   return (
     <div className="min-h-screen bg-blue-50">
       <Navbar />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20 lg:pb-8">
         {children}
       </main>
+      <BottomNav />
     </div>
   );
 }
