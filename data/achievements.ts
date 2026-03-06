@@ -3,6 +3,14 @@ import { Achievement } from '@/types/achievement.types';
 export const ACHIEVEMENTS: Achievement[] = [
   // Succès Communs
   {
+    id: 'welcome',
+    title: 'Bienvenue',
+    description: 'Créer un compte',
+    icon: '/Spendly.png',
+    rarity: 'common',
+    unlocked: false
+  },
+  {
     id: 'first-expense',
     title: 'Première dépense',
     description: 'Enregistrez votre première dépense',
