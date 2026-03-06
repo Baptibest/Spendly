@@ -30,11 +30,7 @@ export default function Navbar() {
     // Charger la photo de profil depuis localStorage
     const loadProfilePicture = () => {
       const savedPicture = localStorage.getItem('profilePicture');
-      if (savedPicture && savedPicture !== '/default-avatar.png') {
-        setProfilePicture(savedPicture);
-      } else {
-        setProfilePicture(null);
-      }
+      setProfilePicture(savedPicture || null);
     };
     
     // Charger les settings au montage
@@ -103,7 +99,7 @@ export default function Navbar() {
                 </Link>
               );
             })}
-            {profilePicture ? (
+            {profilePicture && profilePicture !== '/default-avatar.png' ? (
               <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-300">
                 <Image
                   src={profilePicture}
@@ -115,14 +111,14 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-                <Settings size={20} />
+                <div className="text-2xl">👤</div>
               </div>
             )}
           </div>
 
           {/* Mobile Menu Button */}
           <div className="lg:hidden flex items-center gap-3">
-            {profilePicture ? (
+            {profilePicture && profilePicture !== '/default-avatar.png' ? (
               <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-300">
                 <Image
                   src={profilePicture}
@@ -134,7 +130,7 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-                <Settings size={20} />
+                <div className="text-2xl">👤</div>
               </div>
             )}
             <button
